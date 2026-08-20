@@ -81,15 +81,46 @@ def diagnose_competency(
     return vector
 
 
-def compute_gap(competency_vector: dict[str, dict[str, float]], track: str) -> dict[str, float]:
-    """목표 트랙 가중치 - 현재 역량(검증+자기신고). 음수는 0으로 클램프(이미 충분하면 격차 없음)."""
+def compute_gap(
+    competency_vector: dict[str, dict[str, float]],
+    track: str,
+    overlay: dict[str, float] | None = None,
+) -> dict[str, float]:
+    """목표(트랙 가중치, 오버레이 있으면 병합) - 현재 역량(검증+자기신고). 음수는 0으로 클램프.
+
+    overlay: `get_domain_overlay()`/`get_grad_lab_cluster()`로 조회한 가중치 dict.
+    같은 역량 축을 트랙과 오버레이가 둘 다 가리키면 더 큰 쪽을 목표로 삼는다(단순 합산은
+    두 축이 겹칠 때 목표치가 부풀려져 격차가 과장될 수 있어 피한다).
+    """
     ontology = _load_ontology()
-    target = ontology["tracks"][track]
+    target = {k: v for k, v in ontology["tracks"][track].items() if k != "label"}
+    if overlay:
+        for competency_id, weight in overlay.items():
+            if competency_id == "label":
+                continue
+            target[competency_id] = max(target.get(competency_id, 0.0), weight)
+
     gap = {}
     for competency_id, target_weight in target.items():
-        if competency_id == "label":
-            continue
         current = competency_vector.get(competency_id, {"verified": 0.0, "self_reported": 0.0})
         current_level = current["verified"] + current["self_reported"]
         gap[competency_id] = max(0.0, target_weight - current_level)
     return gap
+
+
+def list_domain_overlays() -> list[str]:
+    """산업 오버레이 이름 목록(화면1 2차 드롭다운용)."""
+    return list(_load_ontology().get("domain_overlays", {}).keys())
+
+
+def get_domain_overlay(name: str) -> dict[str, float]:
+    return _load_ontology()["domain_overlays"][name]
+
+
+def list_grad_lab_clusters() -> list[str]:
+    """대학원_연구 트랙 선택 시 나타나는 연구실 클러스터 이름 목록."""
+    return list(_load_ontology().get("grad_lab_clusters", {}).keys())
+
+
+def get_grad_lab_cluster(name: str) -> dict[str, float]:
+    return _load_ontology()["grad_lab_clusters"][name]

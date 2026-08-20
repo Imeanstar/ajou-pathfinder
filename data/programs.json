@@ -228,5 +228,443 @@
     "contact": "신학생회관 424호, 031-219-2274",
     "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002010",
     "competency_tags": []
+  },
+  {
+    "id": "NCR000000002063",
+    "title": "[미래자동차 Skill-UP] 2025학년도 하계 자율주행 시뮬레이션 교육",
+    "org": "미래자동차 혁신융합대학사업단 혁신융합팀",
+    "category_path": [
+      "학습역량 강화",
+      "교육",
+      "강좌/특강"
+    ],
+    "program_type": "선발형",
+    "apply_period": "2025-06-23 13 : 00 ~ 2025-07-23 13 : 00",
+    "operate_period": "2025-07-28 09 : 00 ~ 2025-08-01 18 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "팔달관 1020호",
+    "format": "강의형(다회성)",
+    "contact": "zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002063",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002064",
+    "title": "[기업탐방]한국전력기술(주) Power Engineering School(PES) summer camp 32기 모집(3명 선발)",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "교육",
+      "캠프(단기)"
+    ],
+    "program_type": "선발형",
+    "apply_period": "2025-06-23 00 : 00 ~ 2025-07-14 23 : 50",
+    "operate_period": "2025-08-19 11 : 00 ~ 2025-08-22 12 : 00",
+    "target_dept": "모든과",
+    "target_grade": "3,4 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "캠프, 연수",
+    "contact": "031-219-3092",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002064",
+    "competency_tags": [
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002071",
+    "title": "[거점형]미래자동차 개발 및 제조 기술과정(w. 경진대회)",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "교육",
+      "강좌/특강/프로그램(온라인 강의 포함)"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-07-01 10 : 00 ~ 2025-07-14 14 : 00",
+    "operate_period": "2025-07-22 15 : 00 ~ 2025-08-07 21 : 00",
+    "target_dept": "모든과",
+    "target_grade": "4 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "강의형(다회성)",
+    "contact": "031-219-3263",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002071",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002114",
+    "title": "[미래자동차 Skill-UP] 2025-2학기 ISO 26262 기초 온라인과정",
+    "org": "미래자동차 혁신융합대학사업단 혁신융합팀",
+    "category_path": [
+      "학습역량 강화",
+      "교육",
+      "강좌/특강"
+    ],
+    "program_type": "선발형",
+    "apply_period": "2025-08-20 13 : 00 ~ 2025-09-05 14 : 00",
+    "operate_period": "2025-09-15 00 : 00 ~ 2025-10-24 23 : 50",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "온라인(이러닝과정)",
+    "format": "강의형(다회성)",
+    "contact": "zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002114",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002123",
+    "title": "[미래자동차 Skill-UP] E-모빌리티 전기추진 기술 소개: 전기차에서 하이퍼루프까지",
+    "org": "미래자동차 혁신융합대학사업단 혁신융합팀",
+    "category_path": [
+      "학습역량 강화",
+      "교육",
+      "강좌/특강"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-08-28 11 : 00 ~ 2025-09-17 13 : 00",
+    "operate_period": "2025-09-17 13 : 00 ~ 2025-09-17 16 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "율곡관 151호(영상회의실)",
+    "format": "세미나, 특강, 설명회 등(1회성)",
+    "contact": "031-219-3017 / zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002123",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002156",
+    "title": "[미래자동차 Skill-UP] 자율주행기반 무인 모빌리티 기술/서비스 동향 및 전망",
+    "org": "혁신융합팀 미래자동차 혁신융합대학사업단",
+    "category_path": [
+      "학습역량 강화",
+      "교육",
+      "강좌/특강"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "- 13 : 00 ~ - 14 : 00",
+    "operate_period": "- 13 : 00 ~ - 14 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "율곡관 151호(영상회의실)",
+    "format": "세미나, 특강, 설명회 등(1회성)",
+    "contact": "zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002156",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002157",
+    "title": "[미래자동차 Skill-UP] 자율주행기반 무인 모빌리티 기술/서비스 동향 및 전망",
+    "org": "혁신융합팀 미래자동차 혁신융합대학사업단",
+    "category_path": [
+      "학습역량 강화",
+      "교육",
+      "강좌/특강"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-10-20 13 : 00 ~ 2025-11-05 14 : 00",
+    "operate_period": "2025-11-05 14 : 00 ~ 2025-11-05 16 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "율곡관 151호(영상회의실)",
+    "format": "세미나, 특강, 설명회 등(1회성)",
+    "contact": "031-219-3017 / zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002157",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002170",
+    "title": "2025 멘토링 프로그램-선배만남의 날(반도체산업-SK하이닉스 멘토)",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "멘토링",
+      "멘티"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-08-12 00 : 00 ~ 2025-08-26 18 : 00",
+    "operate_period": "2025-08-26 19 : 00 ~ 2025-08-26 21 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "멘토링, 튜터링",
+    "contact": "031-219-3265",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002170",
+    "competency_tags": [
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002182",
+    "title": "25하반기 공기업 채용 특강",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "교육",
+      "강좌/특강/프로그램(온라인 강의 포함)"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-08-18 00 : 00 ~ 2025-09-11 10 : 00",
+    "operate_period": "2025-09-11 18 : 00 ~ 2025-09-11 20 : 30",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "세미나, 특강, 설명회 등(1회성)",
+    "contact": "031-219-3262",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002182",
+    "competency_tags": [
+      "공공정책_행정이해",
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002186",
+    "title": "SK하이닉스 채용대비 1대1 컨설팅",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "상담",
+      "개인상담"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-09-16 00 : 00 ~ 2025-09-19 16 : 00",
+    "operate_period": "2025-09-29 00 : 00 ~ 2025-09-30 00 : 00",
+    "target_dept": "모든과",
+    "target_grade": "4 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "상담, 검사",
+    "contact": "031-219-3262",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002186",
+    "competency_tags": [
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002187",
+    "title": "2025 금융권 취업전략(선배만남의날-멘토링 프로그램)",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "멘토링",
+      "멘티"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-09-11 15 : 00 ~ 2025-09-19 18 : 00",
+    "operate_period": "2025-09-19 19 : 00 ~ 2025-09-19 21 : 30",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "멘토링, 튜터링",
+    "contact": "031-219-3265",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002187",
+    "competency_tags": [
+      "금융_핀테크지식",
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002192",
+    "title": "[기업탐방]자산관리공사 경기지역본부",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "현장경험",
+      "탐방(국내)"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-09-12 00 : 00 ~ 2025-09-28 23 : 50",
+    "operate_period": "2025-09-29 15 : 00 ~ 2025-09-29 17 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "기업체 탐방, 견학",
+    "contact": "031-219-3092",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002192",
+    "competency_tags": [
+      "공공정책_행정이해",
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002196",
+    "title": "[캠리]삼성전자 협력사 채용설명회(10/14)",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "교육",
+      "행사 참여(설명회/박람회/이벤트)"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-09-24 00 : 00 ~ 2025-10-14 09 : 00",
+    "operate_period": "2025-10-14 16 : 00 ~ 2025-10-14 17 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "-",
+    "format": "세미나, 특강, 설명회 등(1회성)",
+    "contact": "031-219-3092",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002196",
+    "competency_tags": [
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002211",
+    "title": "미래자동차 현장견학(성남시 한국도로공사 교통관제센터)",
+    "org": "미래자동차 혁신융합대학사업단 혁신융합팀",
+    "category_path": [
+      "학습역량 강화",
+      "현장경험",
+      "탐방(국내)"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-10-27 11 : 00 ~ 2025-11-10 11 : 00",
+    "operate_period": "2025-11-19 13 : 00 ~ 2025-11-19 14 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "성남시 한국도로공사 교통관제센터",
+    "format": "기업체 탐방, 견학",
+    "contact": "031-219-3017 / zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002211",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "공공정책_행정이해",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002231",
+    "title": "[미래자동차 Skill-UP] 2025-동계 A-SPICE 상/하 단과 과정",
+    "org": "미래자동차 혁신융합대학사업단 혁신융합팀",
+    "category_path": [
+      "학습역량 강화",
+      "교육",
+      "강좌/특강"
+    ],
+    "program_type": "선발형",
+    "apply_period": "2025-11-27 17 : 00 ~ 2025-12-19 14 : 00",
+    "operate_period": "2025-12-22 00 : 00 ~ 2026-01-29 14 : 30",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "온라인(이러닝과정), 대면특강(율곡관 혁신공유라운지)",
+    "format": "강의형(다회성)",
+    "contact": "031-219-3017 / zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002231",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002233",
+    "title": "[미래자동차 Skill-UP] 디지털트윈 기반 미래 모빌리티 시뮬레이션 활용방안",
+    "org": "미래자동차 혁신융합대학사업단 혁신융합팀",
+    "category_path": [
+      "학습역량 강화",
+      "교육",
+      "강좌/특강"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-12-03 11 : 00 ~ 2026-01-26 13 : 00",
+    "operate_period": "2026-01-26 13 : 00 ~ 2026-01-26 16 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "율곡관 지하 혁싱공유라운지",
+    "format": "세미나, 특강, 설명회 등(1회성)",
+    "contact": "031-219-3017 / zbxncm15@ajou.ac.kr",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002233",
+    "competency_tags": [
+      "모빌리티_임베디드지식",
+      "문제해결_코딩테스트"
+    ]
+  },
+  {
+    "id": "NCR000000002261",
+    "title": "[기업탐방]자산관리공사 경기지역본부(2차)",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "현장경험",
+      "탐방(국내)"
+    ],
+    "program_type": "선착순형",
+    "apply_period": "2025-11-19 00 : 00 ~ 2025-11-26 23 : 50",
+    "operate_period": "2025-11-27 15 : 00 ~ 2025-11-27 17 : 00",
+    "target_dept": "모든과",
+    "target_grade": "1,2,3,4,5,6 학년",
+    "target_audience": "-",
+    "location": "한국자산관리공사 경기지역본",
+    "format": "기업체 탐방, 견학",
+    "contact": "031-219-3092",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002261",
+    "competency_tags": [
+      "공공정책_행정이해",
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
+  },
+  {
+    "id": "NCR000000002285",
+    "title": "[기업탐방]한국전력기술(주) Power Engineering School(PES) Winterer camp 33기 모집(3명 선발)",
+    "org": "대학일자리플러스센터운영팀",
+    "category_path": [
+      "취업/창업",
+      "교육",
+      "캠프(단기)"
+    ],
+    "program_type": "선발형",
+    "apply_period": "2025-12-30 00 : 00 ~ 2026-01-18 23 : 50",
+    "operate_period": "2026-02-23 11 : 00 ~ 2026-02-26 13 : 00",
+    "target_dept": "모든과",
+    "target_grade": "3,4 학년",
+    "target_audience": "-",
+    "location": "한국전력기술 본사(경북 김천시)",
+    "format": "캠프, 연수",
+    "contact": "031-219-3092",
+    "url": "https://hub.ajou.ac.kr/ncrProgramAppl/a/m/getProgramDetail.do?npiKeyId=NCR000000002285",
+    "competency_tags": [
+      "창업_비즈니스",
+      "커뮤니케이션_문서화"
+    ]
   }
 ]

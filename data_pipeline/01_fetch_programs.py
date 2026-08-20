@@ -101,15 +101,24 @@ def main():
     parser.add_argument("--start", type=int, default=1900, help="npiKeyId 순회 시작값")
     parser.add_argument("--end", type=int, default=2200, help="npiKeyId 순회 종료값(포함 안 함)")
     parser.add_argument("--limit", type=int, default=None, help="유효 프로그램을 이만큼 모으면 조기 종료")
+    parser.add_argument(
+        "--ids", type=str, default=None,
+        help="쉼표로 구분한 npiKeyId 숫자 목록(예: 2063,2071). 주어지면 --start/--end/--limit 무시하고 이 ID들만 수집. "
+             "도메인 오버레이 검증용으로 특정 프로그램을 확실히 확보할 때 사용(2026-08-20 추가)",
+    )
     args = parser.parse_args()
 
     DATA_DIR.mkdir(exist_ok=True)
     LOG_DIR.mkdir(exist_ok=True)
 
-    programs = []
-    errors = []
+    raw_path = DATA_DIR / "programs_raw.json"
+    existing = json.loads(raw_path.read_text(encoding="utf-8")) if raw_path.exists() else []
+    by_id = {p["id"]: p for p in existing}  # 기존 결과를 유지한 채 병합(덮어쓰지 않음)
 
-    for n in range(args.start, args.end):
+    errors = []
+    target_ids = [int(x) for x in args.ids.split(",")] if args.ids else range(args.start, args.end)
+
+    for n in target_ids:
         npi_key_id = f"{n:012d}"
         raw = fetch(npi_key_id)
         if raw is None:
@@ -119,16 +128,17 @@ def main():
         else:
             parsed = parse_program_detail(raw, npi_key_id)
             if parsed:
-                programs.append(parsed)
+                by_id[parsed["id"]] = parsed
             else:
                 errors.append(f"NCR{npi_key_id}: 응답은 유효 크기였으나 파싱 실패 (구조 변경 의심)")
 
         time.sleep(REQUEST_INTERVAL_SEC)
 
-        if args.limit and len(programs) >= args.limit:
+        if args.limit and len(by_id) - len(existing) >= args.limit:
             break
 
-    with open(DATA_DIR / "programs_raw.json", "w", encoding="utf-8") as f:
+    programs = list(by_id.values())
+    with open(raw_path, "w", encoding="utf-8") as f:
         json.dump(programs, f, ensure_ascii=False, indent=2)
 
     if errors:

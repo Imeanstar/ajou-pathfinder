@@ -1,3 +1,5 @@
+import pytest
+
 from app.agents.competency import ManualProject
 from app.agents.supervisor import run_competency_diagnosis, run_full_plan, run_recommendations
 from app.parser import TranscriptData
@@ -32,6 +34,41 @@ def test_run_recommendations_chains_competency_gap_and_reco_nodes():
     assert len(result["course_recommendations"]) > 0
     top_course = result["course_recommendations"][0]
     assert "name" in top_course and "reason" in top_course
+
+
+def test_run_recommendations_applies_domain_overlay_to_gap():
+    transcript = TranscriptData(courses=[])
+    result = run_recommendations(
+        transcript, projects=[], track="백엔드",
+        taken_course_names=set(), taken_program_titles=set(),
+        domain_overlay="금융권",
+    )
+    assert result["gap"]["금융_핀테크지식"] > 0  # 백엔드 트랙 자체엔 없던 축이 오버레이로 들어옴
+
+
+def test_run_recommendations_with_automotive_overlay_surfaces_real_hub_program():
+    # 실측 검증(2026-08-20): 아주허브에 [미래자동차 Skill-UP] 시리즈가 실제로 존재하고
+    # data/programs.json에 모빌리티_임베디드지식 태그로 이미 수집·태깅되어 있다.
+    # 자동차 오버레이를 선택하면 그 시리즈 중 하나가 실제로 추천에 나와야 한다.
+    transcript = TranscriptData(courses=[])
+    result = run_recommendations(
+        transcript, projects=[], track="시스템_네트워크_엔지니어",
+        taken_course_names=set(), taken_program_titles=set(),
+        domain_overlay="자동차",
+    )
+    program_names = [r["name"] for r in result["program_recommendations"]]
+    assert any("미래자동차" in name for name in program_names)
+
+
+def test_run_recommendations_applies_grad_lab_cluster_for_graduate_track():
+    transcript = TranscriptData(courses=[])
+    result = run_recommendations(
+        transcript, projects=[], track="대학원_연구",
+        taken_course_names=set(), taken_program_titles=set(),
+        grad_lab_cluster="AI_데이터_연구실",
+    )
+    # AI_데이터_연구실 클러스터의 데이터_ML(0.9)이 대학원_연구 트랙 자체(0.5)보다 커서 그 값을 따라간다
+    assert result["gap"]["데이터_ML"] == pytest.approx(0.9)
 
 
 def test_run_full_plan_produces_a_roadmap_from_end_to_end_graph_execution():

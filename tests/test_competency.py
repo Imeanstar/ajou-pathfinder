@@ -1,6 +1,14 @@
 import pytest
 
-from app.agents.competency import ManualProject, compute_gap, diagnose_competency
+from app.agents.competency import (
+    ManualProject,
+    compute_gap,
+    diagnose_competency,
+    get_domain_overlay,
+    get_grad_lab_cluster,
+    list_domain_overlays,
+    list_grad_lab_clusters,
+)
 from app.parser import TranscriptData
 
 
@@ -45,10 +53,11 @@ def test_diagnose_competency_기타_필드는_LLM_없이_기여하지_않음():
     assert all(v["self_reported"] == 0.0 for v in result.values())
 
 
-def test_diagnose_competency_returns_all_thirteen_competencies():
+def test_diagnose_competency_returns_all_sixteen_competencies():
+    # 13(기술) + 3(도메인 지식: 금융·핀테크/모빌리티·임베디드/공공정책·행정) = 16 (2026-08-20 개정)
     transcript = TranscriptData(courses=[])
     result = diagnose_competency(transcript, projects=[], track="백엔드")
-    assert len(result) == 13
+    assert len(result) == 16
 
 
 def test_diagnose_competency_raises_on_unknown_track():
@@ -73,3 +82,34 @@ def test_compute_gap_skips_the_label_key_present_on_some_tracks():
     # AI_데이터/기획_PM/대학원_연구는 track dict에 'label' 문자열 키가 섞여 있다(경쟁·매핑용이 아님)
     gap = compute_gap({}, track="AI_데이터")
     assert "label" not in gap
+
+
+def test_compute_gap_merges_domain_overlay_adding_new_domain_axis():
+    overlay = get_domain_overlay("금융권")
+    gap = compute_gap({}, track="백엔드", overlay=overlay)
+    assert gap["금융_핀테크지식"] == pytest.approx(0.9)  # 역할 트랙엔 없던 축이 오버레이로 추가됨
+
+
+def test_compute_gap_merge_takes_max_when_both_track_and_overlay_weight_same_axis():
+    overlay = {"보안": 0.4}  # 백엔드 트랙 자체도 보안: 0.4
+    gap_with_overlay = compute_gap({}, track="백엔드", overlay=overlay)
+    gap_without_overlay = compute_gap({}, track="백엔드")
+    assert gap_with_overlay["보안"] == gap_without_overlay["보안"]  # 겹치면 낮은 쪽에 끌려가지 않음
+
+
+def test_list_domain_overlays_returns_all_three():
+    assert set(list_domain_overlays()) == {"금융권", "자동차", "공공기관"}
+
+
+def test_get_domain_overlay_returns_named_weights():
+    overlay = get_domain_overlay("자동차")
+    assert overlay["모빌리티_임베디드지식"] == pytest.approx(0.9)
+
+
+def test_list_grad_lab_clusters_returns_all_five():
+    assert len(list_grad_lab_clusters()) == 5
+
+
+def test_get_grad_lab_cluster_returns_named_weights():
+    cluster = get_grad_lab_cluster("AI_데이터_연구실")
+    assert cluster["데이터_ML"] == pytest.approx(0.9)

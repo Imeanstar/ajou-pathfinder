@@ -10,7 +10,13 @@ from typing import TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from app.agents.competency import ManualProject, compute_gap, diagnose_competency
+from app.agents.competency import (
+    ManualProject,
+    compute_gap,
+    diagnose_competency,
+    get_domain_overlay,
+    get_grad_lab_cluster,
+)
 from app.agents.course_reco import recommend_courses
 from app.agents.program_reco import recommend_programs
 from app.agents.roadmap import plan_roadmap
@@ -24,6 +30,8 @@ class PathfinderState(TypedDict, total=False):
     taken_course_names: set[str]
     taken_program_titles: set[str]
     remaining_terms: list[str]
+    domain_overlay: str | None
+    grad_lab_cluster: str | None
     competency_vector: dict[str, dict[str, float]]
     gap: dict[str, float]
     course_recommendations: list[dict]
@@ -36,8 +44,19 @@ def _competency_node(state: PathfinderState) -> dict:
     return {"competency_vector": vector}
 
 
+def _resolve_overlay(state: PathfinderState) -> dict[str, float] | None:
+    """도메인 오버레이(화면1 2차 드롭다운) 또는 대학원 연구실 클러스터 중 선택된 게 있으면 조회.
+    대학원_연구 트랙에서만 grad_lab_cluster가 의미 있고, 그 외 트랙에선 domain_overlay를 쓴다."""
+    if state.get("grad_lab_cluster"):
+        return get_grad_lab_cluster(state["grad_lab_cluster"])
+    if state.get("domain_overlay"):
+        return get_domain_overlay(state["domain_overlay"])
+    return None
+
+
 def _gap_node(state: PathfinderState) -> dict:
-    gap = compute_gap(state["competency_vector"], state["track"])
+    overlay = _resolve_overlay(state)
+    gap = compute_gap(state["competency_vector"], state["track"], overlay=overlay)
     return {"gap": gap}
 
 
@@ -106,15 +125,23 @@ def run_recommendations(
     track: str,
     taken_course_names: set[str],
     taken_program_titles: set[str],
+    domain_overlay: str | None = None,
+    grad_lab_cluster: str | None = None,
 ) -> PathfinderState:
     """추천 목록만 필요할 때(예: 아직 남은 학기를 안 정한 상태) — 그래프 전체를 돌리되
-    remaining_terms를 안 줘서 roadmap 노드는 빈 배치로 통과시킨다."""
+    remaining_terms를 안 줘서 roadmap 노드는 빈 배치로 통과시킨다.
+
+    domain_overlay: 화면1 2차 드롭다운(금융권/자동차/공공기관) 선택값, 없으면 None.
+    grad_lab_cluster: track이 "대학원_연구"일 때만 의미 있는 연구실 클러스터 선택값.
+    """
     return _GRAPH.invoke({
         "transcript": transcript,
         "projects": projects,
         "track": track,
         "taken_course_names": taken_course_names,
         "taken_program_titles": taken_program_titles,
+        "domain_overlay": domain_overlay,
+        "grad_lab_cluster": grad_lab_cluster,
     })
 
 
@@ -125,6 +152,8 @@ def run_full_plan(
     taken_course_names: set[str],
     taken_program_titles: set[str],
     remaining_terms: list[str],
+    domain_overlay: str | None = None,
+    grad_lab_cluster: str | None = None,
 ) -> PathfinderState:
     """화면 3(로드맵) 진입점 — 그래프 전체(역량진단→격차→추천→학기 배치)를 돈다."""
     return _GRAPH.invoke({
@@ -134,4 +163,6 @@ def run_full_plan(
         "taken_course_names": taken_course_names,
         "taken_program_titles": taken_program_titles,
         "remaining_terms": remaining_terms,
+        "domain_overlay": domain_overlay,
+        "grad_lab_cluster": grad_lab_cluster,
     })
