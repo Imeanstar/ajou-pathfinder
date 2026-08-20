@@ -8,7 +8,10 @@
       "1-1",
       "1-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "소프트웨어공학_설계",
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "이산수학",
@@ -19,7 +22,9 @@
       "1-2",
       "1-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "자료구조_알고리즘"
+    ]
   },
   {
     "name": "인공지능입문",
@@ -30,7 +35,9 @@
       "1-2",
       "2-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML"
+    ]
   },
   {
     "name": "객체지향프로그래밍및실습",
@@ -43,7 +50,9 @@
       "2-1",
       "2-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "소프트웨어공학_설계"
+    ]
   },
   {
     "name": "자료구조",
@@ -56,7 +65,9 @@
       "2-1",
       "2-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "자료구조_알고리즘"
+    ]
   },
   {
     "name": "컴퓨터구조",
@@ -69,7 +80,9 @@
       "2-1",
       "2-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "알고리즘",
@@ -82,7 +95,10 @@
       "2-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "자료구조_알고리즘",
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "컴퓨터네트워크",
@@ -93,7 +109,9 @@
       "2-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "운영체제",
@@ -106,7 +124,10 @@
       "3-1",
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크",
+      "클라우드_인프라"
+    ]
   },
   {
     "name": "시스템프로그래밍",
@@ -119,7 +140,10 @@
       "2-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크",
+      "클라우드_인프라"
+    ]
   },
   {
     "name": "디지털회로",
@@ -130,7 +154,9 @@
       "1-2",
       "2-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "네트워크소프트웨어",
@@ -142,7 +168,9 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "컴퓨터통신",
@@ -153,7 +181,9 @@
       "3-1",
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "데이터베이스",
@@ -166,7 +196,9 @@
       "3-1",
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터베이스"
+    ]
   },
   {
     "name": "정보보호",
@@ -179,7 +211,9 @@
       "3-1",
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "보안"
+    ]
   },
   {
     "name": "오픈소스SW입문",
@@ -192,7 +226,9 @@
       "3-1",
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "소프트웨어공학_설계"
+    ]
   },
   {
     "name": "기계학습",
@@ -205,7 +241,9 @@
       "3-1",
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML"
+    ]
   },
   {
     "name": "컴파일러",
@@ -218,7 +256,9 @@
       "3-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "소프트웨어공학_설계"
+    ]
   },
   {
     "name": "데이터마이닝",
@@ -231,7 +271,10 @@
       "3-2",
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터베이스",
+      "데이터_ML"
+    ]
   },
   {
     "name": "IT전문영어",
@@ -244,7 +287,9 @@
       "3-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "커뮤니케이션_문서화"
+    ]
   },
   {
     "name": "IT집중교육1",
@@ -256,7 +301,9 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "IT집중교육2",
@@ -268,7 +315,9 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "자기주도프로젝트",
@@ -281,7 +330,9 @@
       "3-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "계산이론",
@@ -293,7 +344,10 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "자료구조_알고리즘",
+      "연구_분석"
+    ]
   },
   {
     "name": "지능형사물인터넷",
@@ -305,7 +359,9 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "소프트웨어공학",
@@ -318,7 +374,9 @@
       "3-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "소프트웨어공학_설계"
+    ]
   },
   {
     "name": "디지털포렌식",
@@ -330,7 +388,9 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "보안"
+    ]
   },
   {
     "name": "웹시스템설계",
@@ -342,7 +402,10 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "웹_프론트엔드",
+      "소프트웨어공학_설계"
+    ]
   },
   {
     "name": "임베디드소프트웨어",
@@ -354,7 +417,9 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "현대암호이론및응용",
@@ -364,7 +429,9 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "보안"
+    ]
   },
   {
     "name": "실전코딩1",
@@ -375,7 +442,9 @@
       "3-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "실전코딩2",
@@ -386,7 +455,9 @@
       "3-2",
       "3-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "블록체인과IoT",
@@ -398,7 +469,10 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크",
+      "보안"
+    ]
   },
   {
     "name": "AI집중교육1",
@@ -408,7 +482,10 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML",
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "AI집중교육2",
@@ -418,7 +495,10 @@
     "offered_terms": [
       "3-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML",
+      "문제해결_코딩테스트"
+    ]
   },
   {
     "name": "모델링시뮬레이션",
@@ -430,7 +510,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML"
+    ]
   },
   {
     "name": "컴퓨터비젼",
@@ -443,7 +525,9 @@
       "4-1",
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML"
+    ]
   },
   {
     "name": "SW창업론",
@@ -453,7 +537,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "창업_비즈니스"
+    ]
   },
   {
     "name": "모바일네트워크",
@@ -465,7 +551,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "컴퓨터그래픽스",
@@ -477,7 +565,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "웹_프론트엔드"
+    ]
   },
   {
     "name": "자기주도연구1",
@@ -487,7 +577,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "연구_분석"
+    ]
   },
   {
     "name": "분산시스템",
@@ -500,7 +592,9 @@
       "4-1",
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "인공지능컴퓨터시스템",
@@ -510,7 +604,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML"
+    ]
   },
   {
     "name": "AI임베디드시스템",
@@ -520,7 +616,10 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크",
+      "데이터_ML"
+    ]
   },
   {
     "name": "AIoT실시간서비스설계",
@@ -530,7 +629,10 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크",
+      "데이터_ML"
+    ]
   },
   {
     "name": "AI통신네트워크",
@@ -540,7 +642,10 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크",
+      "데이터_ML"
+    ]
   },
   {
     "name": "분산병렬컴퓨팅",
@@ -550,7 +655,10 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크",
+      "클라우드_인프라"
+    ]
   },
   {
     "name": "SW캡스톤디자인",
@@ -561,7 +669,9 @@
       "4-2",
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "SW산업세미나",
@@ -571,7 +681,10 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM",
+      "커뮤니케이션_문서화"
+    ]
   },
   {
     "name": "고급컴퓨터구조",
@@ -583,7 +696,9 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "시스템_네트워크"
+    ]
   },
   {
     "name": "인간과컴퓨터상호작용",
@@ -595,7 +710,9 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "웹_프론트엔드"
+    ]
   },
   {
     "name": "인공지능",
@@ -608,7 +725,9 @@
       "4-2",
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "데이터_ML"
+    ]
   },
   {
     "name": "자기주도연구2",
@@ -619,7 +738,9 @@
       "4-2",
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "연구_분석"
+    ]
   },
   {
     "name": "SW현장실습1",
@@ -629,7 +750,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "SW현장실습2",
@@ -639,7 +762,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "SW현장실습3",
@@ -649,7 +774,9 @@
     "offered_terms": [
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "SW현장실습4",
@@ -659,7 +786,9 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "SW현장실습5",
@@ -669,7 +798,9 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "SW현장실습6",
@@ -679,7 +810,9 @@
     "offered_terms": [
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM"
+    ]
   },
   {
     "name": "창업실습1",
@@ -690,7 +823,9 @@
       "4-1",
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "창업_비즈니스"
+    ]
   },
   {
     "name": "창업실습2",
@@ -701,7 +836,9 @@
       "4-2",
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "창업_비즈니스"
+    ]
   },
   {
     "name": "창업현장실습1",
@@ -712,7 +849,10 @@
       "4-1",
       "4-2"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM",
+      "창업_비즈니스"
+    ]
   },
   {
     "name": "창업현장실습2",
@@ -723,6 +863,9 @@
       "4-2",
       "4-1"
     ],
-    "competency_tags": []
+    "competency_tags": [
+      "협업_PM",
+      "창업_비즈니스"
+    ]
   }
 ]
