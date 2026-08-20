@@ -8,6 +8,8 @@ from app.agents.competency import (
     get_grad_lab_cluster,
     list_domain_overlays,
     list_grad_lab_clusters,
+    list_project_fields,
+    list_tracks,
 )
 from app.parser import TranscriptData
 
@@ -113,3 +115,21 @@ def test_list_grad_lab_clusters_returns_all_five():
 def test_get_grad_lab_cluster_returns_named_weights():
     cluster = get_grad_lab_cluster("AI_데이터_연구실")
     assert cluster["데이터_ML"] == pytest.approx(0.9)
+
+
+def test_list_tracks_returns_eight_role_tracks_with_id_and_label():
+    tracks = list_tracks()
+    assert len(tracks) == 8
+    ids = {t["id"] for t in tracks}
+    assert "백엔드" in ids and "시스템_네트워크_엔지니어" in ids and "SW아키텍트" in ids
+    backend = next(t for t in tracks if t["id"] == "백엔드")
+    assert backend["label"] == "백엔드 프로그래머"
+
+
+def test_list_project_fields_returns_nine_plus_기타_with_id_and_label():
+    fields = list_project_fields()
+    assert len(fields) == 10  # 9개 + 기타
+    ids = {f["id"] for f in fields}
+    assert "기타" in ids
+    web_backend = next(f for f in fields if f["id"] == "웹_백엔드")
+    assert web_backend["label"] == "웹 백엔드"

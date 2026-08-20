@@ -34,9 +34,14 @@ def closed_set_recommend(
     top_k: int,
     select_fn: SelectFn | None,
 ) -> list[Recommendation]:
-    """items: 카탈로그(과목 또는 프로그램). 각 항목에 name_field와 competency_tags가 있어야 한다."""
+    """items: 카탈로그(과목 또는 프로그램). 각 항목에 name_field와 competency_tags가 있어야 한다.
+
+    반환값엔 name/reason 외에 원본 카탈로그 필드(과목의 credit·category, 프로그램의
+    url·org·apply_period 등)를 그대로 실어 보낸다 — 화면3(로드맵)이 이 값을 그대로
+    표시해야 해서다(2026-08-20 추가, 대시보드 설계 중 발견한 공백).
+    """
     normalized = [
-        {"name": item[name_field], "competency_tags": item.get("competency_tags", [])}
+        {**item, "name": item[name_field]}
         for item in items
         if item[name_field] not in taken_names
     ]
@@ -46,12 +51,16 @@ def closed_set_recommend(
     if select_fn is not None:
         candidate_pool = candidates[:10]  # LLM에 넘기는 후보는 상위 10개로 제한
         llm_result = select_fn(candidate_pool, gap)
-        candidate_names = {c["name"] for c in candidate_pool}
-        if llm_result and all(r["name"] in candidate_names for r in llm_result):
-            return llm_result[:top_k]
+        candidate_by_name = {c["name"]: c for c in candidate_pool}
+        if llm_result and all(r["name"] in candidate_by_name for r in llm_result):
+            # LLM은 name/reason만 주므로, 원본 카탈로그 필드는 후보 풀에서 다시 병합한다.
+            return [
+                {**candidate_by_name[r["name"]], "reason": r["reason"]}
+                for r in llm_result[:top_k]
+            ]
         # 빈 결과 또는 후보에 없는 이름(환각) -> 조용히 넘기지 않고 규칙기반으로 대체
 
     return [
-        {"name": c["name"], "reason": _default_reason(c, gap)}
+        {**c, "reason": _default_reason(c, gap)}
         for c in candidates[:top_k]
     ]

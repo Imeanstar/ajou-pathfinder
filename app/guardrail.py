@@ -41,6 +41,34 @@ def detect_injection(text: str, classifier_fn: ClassifierFn | None = None) -> bo
     return classifier_fn(text)
 
 
+_runtime_override: bool | None = None
+_blocked_count = 0
+
+
+def set_guardrail_override(value: bool | None) -> None:
+    """화면의 켬/끔 토글용 — 서버를 재시작하지 않고 프로세스 메모리에서 즉시 반영한다.
+    None이면 오버라이드를 해제하고 GUARDRAIL_ENABLED 환경변수 값으로 되돌아간다."""
+    global _runtime_override
+    _runtime_override = value
+
+
 def is_guardrail_enabled() -> bool:
+    if _runtime_override is not None:
+        return _runtime_override
     value = os.environ.get("GUARDRAIL_ENABLED", "true").strip().lower()
     return value not in ("false", "0", "off")
+
+
+def increment_blocked_count() -> None:
+    """화면에 "인젝션 방어 N건 차단"을 보여주기 위한 세션 카운터(서버 프로세스 생존 동안 유지)."""
+    global _blocked_count
+    _blocked_count += 1
+
+
+def get_blocked_count() -> int:
+    return _blocked_count
+
+
+def reset_blocked_count() -> None:
+    global _blocked_count
+    _blocked_count = 0

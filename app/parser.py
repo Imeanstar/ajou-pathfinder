@@ -7,10 +7,12 @@
     -> mask_and_validate(): PII 제거+검증    [LLM 없음, 실패 시 PiiLeakDetected]
     -> 마스킹된 텍스트만 구조화 함수(Gemini)에 전송 -> 과목 리스트
 
-`extract_words_from_pdf`는 pdfplumber 경계 코드라 실제 성적표 샘플 없이는
-단위 테스트가 어렵다 — 팀이 실제 샘플을 확보하면 통합 테스트를 추가할 것.
-그 대신 핵심 로직(마스킹 순서·PII 유출 시 LLM 미호출)은 `parse_transcript_from_words`로
-분리해 실제 PDF 없이도 검증 가능하게 했다(tests/test_parser.py).
+핵심 로직(마스킹 순서·PII 유출 시 LLM 미호출)은 `parse_transcript_from_words`로 분리해
+합성 좌표 데이터로도 검증 가능하다. `extract_words_from_pdf`(pdfplumber 경계)는
+2026-08-20부터 reportlab으로 만든 실제 PDF로 통합 테스트가 있다(tests/test_parser.py,
+tests/conftest.py의 build_test_transcript_pdf) — 실제 성적표 샘플이 없어도 pdfplumber
+호출 자체는 검증됨. 다만 실 서비스에서 만날 진짜 아주대 포털 PDF의 레이아웃(표 구조,
+폰트 임베딩 방식 등)까지 보장하진 않으니, 팀이 실 샘플을 구하면 대조 확인할 것.
 """
 import io
 from dataclasses import dataclass
@@ -18,7 +20,7 @@ from typing import Callable
 
 import pdfplumber
 
-from app.guardrail import detect_injection, is_guardrail_enabled
+from app.guardrail import detect_injection, increment_blocked_count, is_guardrail_enabled
 from app.masking import mask_and_validate
 
 StructureFn = Callable[[str], list[dict]]
@@ -50,6 +52,7 @@ def parse_transcript_from_words(words: list[dict], structure_fn: StructureFn) ->
     """
     masked_text = mask_and_validate(words)
     if is_guardrail_enabled() and detect_injection(masked_text):
+        increment_blocked_count()
         raise InjectionDetected("입력에서 프롬프트 인젝션 패턴이 감지되었습니다.")
     courses = structure_fn(masked_text)
     return TranscriptData(courses=courses)

@@ -35,3 +35,13 @@ def test_recommend_programs_falls_back_when_llm_hallucinates():
     )
     titles = {p["title"] for p in programs}
     assert result[0]["name"] in titles
+
+
+def test_recommend_programs_includes_catalog_metadata_for_roadmap_display():
+    # 화면3(로드맵)이 원문 링크·주관부서·마감일을 보여줘야 한다(2026-08-20 추가).
+    programs = json.loads((DATA_DIR / "programs.json").read_text(encoding="utf-8"))
+    any_tag = next(t for p in programs for t in p.get("competency_tags", []))
+    result = recommend_programs({any_tag: 1.0}, taken_titles=set(), top_k=1)
+    assert "url" in result[0]
+    assert "org" in result[0]
+    assert "apply_period" in result[0]

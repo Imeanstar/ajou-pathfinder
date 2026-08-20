@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AJOU Pathfinder</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-name">남은학기</span>
+      <span class="brand-sub">AJOU PATHFINDER</span>
+    </div>
+    <div class="header-right">
+      <span class="pill">🔒 이름·학번은 서버에 저장되지 않습니다</span>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <span class="eyebrow">소프트웨어학과 2025학번 전용 베타</span>
+    <h1 class="hero-title">
+      졸업까지 <span class="accent">무엇을 듣고 무엇에 참여할지</span><br />
+      요람 기준으로 정리해 드립니다.
+    </h1>
+    <p class="hero-sub">
+      성적표를 올리고 목표 진로를 고르면, 요람 조항 근거와 함께 남은 졸업 요건을 계산하고
+      전공 과목과 교내 비교과 프로그램을 학기별로 배치합니다.
+    </p>
+
+    <div id="dropzone" class="dropzone">
+      <input type="file" id="fileInput" accept="application/pdf" />
+      <div class="dz-title">성적표 PDF를 여기에 놓으세요</div>
+      <div class="dz-hint">아주대 포털 → 학사정보 → 성적조회 → PDF 내려받기</div>
+      <div id="dzStatus" class="dz-status hidden"></div>
+    </div>
+
+    <form id="planForm">
+      <div class="form-row">
+        <div class="field">
+          <label for="track">진로 목표</label>
+          <select id="track" name="track" required></select>
+        </div>
+        <div class="field" id="overlayField">
+          <label id="overlayLabel" for="overlay">관심 산업 (선택)</label>
+          <select id="overlay" name="overlay"></select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>과정 구분</label>
+          <div class="radio-group" id="trackTypeGroup"></div>
+        </div>
+        <div class="field">
+          <label>대상 학번 · 학과</label>
+          <span class="locked-chip">2025학번 · 소프트웨어학과</span>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2>개인 프로젝트·활동</h2>
+        <span class="hint">선택 · 성적표에 남지 않는 이력을 채웁니다</span>
+      </div>
+      <div id="projectRows"></div>
+      <button type="button" class="add-link" id="addProjectRow">+ 항목 추가</button>
+
+      <button type="submit" class="btn-primary" id="submitBtn">로드맵 만들기</button>
+      <p class="footnote">
+        파일은 서버에 저장되지 않습니다. 이름·학번을 지운 뒤에만 모델로 전송됩니다.
+      </p>
+    </form>
+  </main>
+
+  <script src="/js/upload.js"></script>
+</body>
+</html>

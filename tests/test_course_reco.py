@@ -56,3 +56,23 @@ def test_recommend_courses_trusts_valid_llm_selection():
 def test_recommend_courses_ignores_competencies_with_no_gap():
     result = recommend_courses({}, taken_names=set(), top_k=3)
     assert result == []
+
+
+def test_recommend_courses_includes_catalog_metadata_for_roadmap_display():
+    # 화면3(로드맵)이 학점·이수구분·개설학기를 보여줘야 해서 name/reason 말고도 원본
+    # 카탈로그 필드가 같이 실려야 한다(2026-08-20 추가 — 대시보드 설계 중 발견한 공백).
+    result = recommend_courses({"데이터베이스": 1.0}, taken_names=set(), top_k=1)
+    assert "credit" in result[0]
+    assert "category" in result[0]
+    assert "offered_terms" in result[0]
+
+
+def test_recommend_courses_llm_selection_still_carries_catalog_metadata():
+    def valid_select_fn(candidates, gap):
+        chosen = candidates[0]
+        return [{"name": chosen["name"], "reason": "LLM이 설명한 이유"}]
+
+    result = recommend_courses(
+        {"데이터베이스": 1.0}, taken_names=set(), top_k=1, select_fn=valid_select_fn
+    )
+    assert "credit" in result[0]

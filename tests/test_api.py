@@ -1,0 +1,154 @@
+from fastapi.testclient import TestClient
+
+from app.api import app
+from app.guardrail import set_guardrail_override
+from tests.conftest import build_test_transcript_pdf
+
+client = TestClient(app)
+
+
+def test_health_returns_ok():
+    resp = client.get("/health")
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "ok"
+
+
+def test_config_returns_tracks_overlays_clusters_and_project_fields():
+    resp = client.get("/api/config")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert len(body["tracks"]) == 8
+    assert set(body["domain_overlays"]) == {"금융권", "자동차", "공공기관"}
+    assert len(body["grad_lab_clusters"]) == 5
+    assert len(body["project_fields"]) == 10
+    assert body["admission_year"] == 2025
+
+
+def test_upload_masks_pii_and_returns_courses_without_api_key(monkeypatch):
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    pdf_bytes = build_test_transcript_pdf(include_pii=True)
+
+    resp = client.post("/api/upload", files={"file": ("transcript.pdf", pdf_bytes, "application/pdf")})
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["pii_masked"] is True
+    assert body["courses"] == []  # API 키 없어 구조화 스킵 — 거짓 데이터 대신 빈 결과
+    assert "warning" in body
+    # 응답 어디에도 원본 PII가 남아있지 않아야 함
+    assert "홍길동" not in resp.text
+    assert "202512345" not in resp.text
+
+
+def test_upload_rejects_pdf_with_injection():
+    pdf_bytes = build_test_transcript_pdf(include_pii=False, include_injection=True)
+
+    resp = client.post("/api/upload", files={"file": ("transcript.pdf", pdf_bytes, "application/pdf")})
+
+    assert resp.status_code == 422
+    assert "홍길동" not in resp.text  # 에러 메시지에도 원문이 새면 안 됨
+
+
+def test_plan_returns_requirements_summary_with_thresholds():
+    payload = {
+        "courses": [], "admission_year": 2025, "track_type": "일반과정", "track": "백엔드",
+    }
+    resp = client.post("/api/plan", json=payload)
+    summary = resp.json()["requirements_summary"]
+    assert summary["total_credit_required"] == 128
+    assert summary["elective_major_credit_required"] == 10  # 일반과정 기준
+    assert summary["required_major_course_count"] == 10
+    assert summary["language_requirement"]["TOEIC"] == 730
+
+
+def test_plan_returns_citations_for_missing_required_courses():
+    payload = {
+        "courses": [{"name": "자료구조", "credit": 3, "category": "전공필수"}],
+        "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+    }
+    resp = client.post("/api/plan", json=payload)
+    citations = resp.json()["citations"]
+    items = {c["item"] for c in citations}
+    assert "알고리즘" in items
+    # 요람 청크(data/yoram_chunks.jsonl)에 전공필수 조항이 있어 근거가 비어있지 않아야 함
+    matched = next(c for c in citations if c["item"] == "알고리즘")
+    assert matched["citation"] is not None
+
+
+def test_guardrail_toggle_flips_state_without_restart():
+    set_guardrail_override(None)  # 다른 테스트가 남긴 오버라이드 없이 깨끗하게 시작
+    try:
+        initial = client.get("/api/guardrail").json()["enabled"]
+        toggled = client.post("/api/guardrail/toggle").json()["enabled"]
+        assert toggled != initial
+    finally:
+        # 토글을 한 번 더 누르면 True/False끼리만 왕복해 오버라이드가 남는다 —
+        # "환경변수를 따르는 상태"로 완전히 되돌리려면 None으로 직접 리셋해야 한다
+        # (2026-08-20 실제로 이 격리 문제 때문에 다른 테스트가 깨졌었음).
+        set_guardrail_override(None)
+
+
+def test_plan_returns_full_pipeline_result_for_backend_track():
+    payload = {
+        "courses": [{"name": "자료구조", "credit": 3, "category": "전공필수"}],
+        "admission_year": 2025,
+        "track_type": "심화과정",
+        "track": "백엔드",
+    }
+    resp = client.post("/api/plan", json=payload)
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["audit"]["required_major_completed"] is False
+    assert "알고리즘" in body["audit"]["missing_required_major_courses"]
+    assert body["gap"]["데이터베이스"] > 0
+    assert isinstance(body["course_recommendations"], list)
+    assert set(body["roadmap"]["schedule"].keys()) == {"2-2", "3-1", "3-2", "4-1", "4-2"}
+
+
+def test_plan_with_domain_overlay_surfaces_real_automotive_program():
+    payload = {
+        "courses": [],
+        "admission_year": 2025,
+        "track_type": "심화과정",
+        "track": "시스템_네트워크_엔지니어",
+        "domain_overlay": "자동차",
+    }
+    resp = client.post("/api/plan", json=payload)
+
+    assert resp.status_code == 200
+    body = resp.json()
+    program_names = [r["name"] for r in body["program_recommendations"]]
+    assert any("미래자동차" in name for name in program_names)
+
+
+def test_plan_with_grad_lab_cluster_weights_data_ml_higher():
+    payload = {
+        "courses": [],
+        "admission_year": 2025,
+        "track_type": "심화과정",
+        "track": "대학원_연구",
+        "grad_lab_cluster": "AI_데이터_연구실",
+    }
+    resp = client.post("/api/plan", json=payload)
+
+    assert resp.status_code == 200
+    assert resp.json()["gap"]["데이터_ML"] > 0.5  # 클러스터(0.9)가 대학원 트랙 기본(0.5)보다 큼
+
+
+def test_chat_answer_resolves_language_requirement():
+    plan_resp = client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+    })
+    audit = plan_resp.json()["audit"]
+
+    resp = client.post("/api/chat/answer", json={
+        "audit": audit,
+        "answers": {"language_requirement": "토익 750점이야"},
+        "admission_year": 2025,
+    })
+
+    assert resp.status_code == 200
+    updated = resp.json()
+    assert updated["language_ok"] is True
+    assert "language_requirement" not in updated["unresolved"]

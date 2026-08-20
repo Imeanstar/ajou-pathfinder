@@ -2,7 +2,14 @@ import os
 
 import pytest
 
-from app.guardrail import detect_injection, is_guardrail_enabled
+from app.guardrail import (
+    detect_injection,
+    get_blocked_count,
+    increment_blocked_count,
+    is_guardrail_enabled,
+    reset_blocked_count,
+    set_guardrail_override,
+)
 
 
 def test_blocks_injection_in_project_title():
@@ -57,3 +64,29 @@ def test_guardrail_enabled_by_default(monkeypatch):
 def test_guardrail_can_be_disabled_via_env_for_demo(monkeypatch):
     monkeypatch.setenv("GUARDRAIL_ENABLED", "false")
     assert is_guardrail_enabled() is False
+
+
+def test_guardrail_runtime_override_beats_env_var(monkeypatch):
+    # 화면에서 토글할 땐 서버를 재시작할 수 없으니, 프로세스 메모리상의 오버라이드가
+    # 환경변수보다 우선해야 실시간 켬/끔 시연이 된다(2026-08-20 추가).
+    monkeypatch.setenv("GUARDRAIL_ENABLED", "true")
+    set_guardrail_override(False)
+    try:
+        assert is_guardrail_enabled() is False
+    finally:
+        set_guardrail_override(None)  # 다른 테스트에 영향 안 주게 원복
+
+
+def test_guardrail_override_none_falls_back_to_env(monkeypatch):
+    monkeypatch.setenv("GUARDRAIL_ENABLED", "true")
+    set_guardrail_override(None)
+    assert is_guardrail_enabled() is True
+
+
+def test_blocked_count_starts_at_zero_and_increments():
+    reset_blocked_count()
+    assert get_blocked_count() == 0
+    increment_blocked_count()
+    increment_blocked_count()
+    assert get_blocked_count() == 2
+    reset_blocked_count()

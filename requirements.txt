@@ -5,6 +5,14 @@ scikit-learn>=1.9
 numpy>=1.26
 langgraph>=0.2
 mcp[cli]>=2.0
-# GOOGLE_API_KEY가 있을 때만 실제로 import됨(app/retrieval.py의 GeminiEncoder) —
-# 키 없이 개발 중인 지금은 설치 안 해도 TF-IDF 대체 경로로 전부 동작함
-# langchain-google-genai>=2
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+httpx>=0.27
+reportlab>=4.2
+python-dotenv>=1
+# GOOGLE_API_KEY가 있을 때만 실제로 import됨(app/retrieval.py의 GeminiEncoder,
+# app/llm.py의 _call_gemini) — 키 없이 개발 중인 지금은 설치 안 해도
+# TF-IDF/빈결과 대체 경로로 전부 동작함. google-generativeai(구 SDK)는 폐지
+# 예정이라 유지보수 중인 google-genai(신 SDK)를 쓴다.
+google-genai>=1

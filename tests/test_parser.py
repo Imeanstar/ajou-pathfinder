@@ -1,7 +1,13 @@
 import pytest
 
 from app.masking import PiiLeakDetected
-from app.parser import InjectionDetected, parse_transcript_from_words
+from app.parser import (
+    InjectionDetected,
+    extract_words_from_pdf,
+    parse_transcript,
+    parse_transcript_from_words,
+)
+from tests.conftest import build_test_transcript_pdf
 
 
 def test_parse_transcript_sends_only_masked_text_to_structure_fn():
@@ -72,3 +78,48 @@ def test_parse_transcript_allows_injection_text_when_guardrail_disabled(monkeypa
 
     result = parse_transcript_from_words(words, structure_fn=fake_structure_fn)
     assert result.courses == [{"name": "무관", "credit": 0, "category": "무관"}]
+
+
+# --- 실제 PDF 통합 테스트 (2026-08-20 추가) ---
+# reportlab으로 만든 진짜 PDF로 extract_words_from_pdf(pdfplumber 경계)까지 포함해
+# 전체 파이프라인을 검증한다 — parser.py 상단 docstring에 적혀있던 "실제 성적표 샘플이
+# 없어 단위 테스트 어렵다"는 한계를 여기서 해소한다.
+
+
+def test_extract_words_from_pdf_reads_real_pdf_with_korean_text():
+    pdf_bytes = build_test_transcript_pdf(include_pii=True)
+    words = extract_words_from_pdf(pdf_bytes)
+    texts = [w["text"] for w in words]
+    assert "홍길동" in texts
+    assert "자료구조" in texts
+
+
+def test_parse_transcript_masks_pii_from_real_pdf_end_to_end():
+    pdf_bytes = build_test_transcript_pdf(include_pii=True)
+    captured = {}
+
+    def fake_structure_fn(masked_text):
+        captured["text"] = masked_text
+        return [{"name": "자료구조", "credit": 3, "category": "전공필수"}]
+
+    result = parse_transcript(pdf_bytes, structure_fn=fake_structure_fn)
+
+    assert "홍길동" not in captured["text"]
+    assert "202512345" not in captured["text"]
+    assert "자료구조" in captured["text"]
+    assert result.courses == [{"name": "자료구조", "credit": 3, "category": "전공필수"}]
+
+
+def test_parse_transcript_blocks_injection_embedded_in_real_pdf(monkeypatch):
+    monkeypatch.delenv("GUARDRAIL_ENABLED", raising=False)
+    pdf_bytes = build_test_transcript_pdf(include_pii=False, include_injection=True)
+    called = []
+
+    def fake_structure_fn(masked_text):
+        called.append(masked_text)
+        return []
+
+    with pytest.raises(InjectionDetected):
+        parse_transcript(pdf_bytes, structure_fn=fake_structure_fn)
+
+    assert called == []

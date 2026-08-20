@@ -108,6 +108,24 @@ def compute_gap(
     return gap
 
 
+def list_tracks() -> list[dict]:
+    """화면1 '진로 목표' 드롭다운용 — 역할 트랙 8개를 {id, label}로."""
+    ontology = _load_ontology()
+    return [
+        {"id": track_id, "label": data.get("label", track_id)}
+        for track_id, data in ontology["tracks"].items()
+    ]
+
+
+def list_project_fields() -> list[dict]:
+    """화면1 개인 프로젝트 '분야' 드롭다운용 — 9개 + 기타를 {id, label}로."""
+    ontology = _load_ontology()
+    return [
+        {"id": field_id, "label": data.get("label", field_id)}
+        for field_id, data in ontology["project_fields"].items()
+    ]
+
+
 def list_domain_overlays() -> list[str]:
     """산업 오버레이 이름 목록(화면1 2차 드롭다운용)."""
     return list(_load_ontology().get("domain_overlays", {}).keys())

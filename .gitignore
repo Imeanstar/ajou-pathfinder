@@ -22,6 +22,10 @@ data_pipeline/logs/
 # 실제 사용자 성적표(PII) — 데모용 마스킹 샘플만 tests/fixtures/에 별도로 커밋
 *.transcript.pdf
 uploads/
+성적표.pdf
+성적표*.pdf
+*성적표*
+*_transcript*.pdf
 
 # 교수님 배포 참고자료(읽기 전용 원본, 용량 큼) — 1차 프로젝트도 같은 방식으로 제외
 # 주의: 대괄호는 gitignore에서 glob 문자이므로 이스케이프 필요

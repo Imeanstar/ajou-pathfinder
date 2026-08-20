@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AJOU Pathfinder — 로드맵</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-name">남은학기</span>
+      <span class="brand-sub">AJOU PATHFINDER</span>
+      <span class="header-context" id="headerContext"></span>
+    </div>
+    <div class="header-right">
+      <span class="pill">🔒 이름·학번 마스킹됨</span>
+      <button class="btn-ghost" id="restartBtn">처음부터</button>
+    </div>
+  </header>
+
+  <main class="dashboard-grid">
+    <section class="col" id="statusCol">
+      <div class="card" id="creditCard"></div>
+      <div class="card" id="competencyCard"></div>
+    </section>
+
+    <section class="col" id="roadmapCol">
+      <div class="card" id="roadmapCard"></div>
+    </section>
+
+    <section class="col chat-col">
+      <div class="card" id="chatCard">
+        <div class="chat-head">상담 <span class="sub">근거 없으면 답하지 않음</span></div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-chips" id="chatChips"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="답변을 입력하세요" />
+          <button id="chatSend">↑</button>
+        </div>
+        <div class="guardrail-status">
+          <span id="guardrailLabel">가드레일 확인 중...</span>
+          <button class="toggle-switch" id="guardrailToggle"></button>
+        </div>
+        <p class="disclaimer">
+          졸업 여부를 확정하지 않습니다. 학사팀에 무엇을 확인해야 하는지를 특정해 드립니다.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
