@@ -1,0 +1,38 @@
+# 비밀 정보
+.env
+.env.local
+*.key
+service-account*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# 실행 중 생성되는 데이터 (수집 스크립트로 재생성 가능 — 원본은 커밋하지 않음)
+data/*.sqlite
+data/programs_raw.json
+data_pipeline/logs/
+
+# 실제 사용자 성적표(PII) — 데모용 마스킹 샘플만 tests/fixtures/에 별도로 커밋
+*.transcript.pdf
+uploads/
+
+# 교수님 배포 참고자료(읽기 전용 원본, 용량 큼) — 1차 프로젝트도 같은 방식으로 제외
+# 주의: 대괄호는 gitignore에서 glob 문자이므로 이스케이프 필요
+\[참고자료\]/
+\[2026.08.20\]_AJOU_PBL_2차_프로젝트_가이드.pptx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 임시/백업
+~$*
+*.backup_*.docx
+*.backup_*.pptx

@@ -1,0 +1,4448 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 자기주도활동 상태 -->
+
+
+
+
+
+
+
+<!-- 자기주도활동 종류 -->
+
+
+
+
+
+
+
+
+
+<!-- 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 학생 쪽 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+<!-- 학생신청상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 동료평가 진행단계 -->
+
+
+
+
+
+<!-- 진로설계 목표 계획 구분 값 -->
+
+
+
+
+
+<!-- 진단 타입값 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 진로 및 취업 상담 -->
+
+<!-- 외국인 상담 -->
+
+<!-- 학생생활 상담소 -->
+
+<!-- 학습상담 -->
+
+<!-- 창업상담-->
+
+<!-- 경제/장학 상담 -->
+
+<!-- 현장실습 상담 -->
+
+<!-- 현장실습 상담 -->
+
+
+<!-- 방문상담 신청구분 -->
+
+
+
+
+<!-- 방문상담 신청상태 -->
+
+
+
+
+
+
+
+<!-- 온라인 상담 상태 -->
+
+
+
+
+
+
+<!-- 학생생활상담 상태 -->
+
+
+
+
+
+
+
+<!-- 성희롱.성폭력  상담 상태 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+	
+	
+	
+		
+	
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi shrink-to-fit=no">
+	<meta name="format-detection" content="telephone=no, address=no">
+	<meta name="title" content="아주대학교  아주허브(Hub)">
+	<meta name="description" content="아주대학교  아주허브(Hub)">
+	<meta name="copyrigt" content="아주대학교">
+	<meta name="keywords" content="아주대학교,  아주허브(Hub), 역량관리, 상담, 대학, 대학생, 역량관리시스템, 경력관리">
+	<title>아주대학교 아주허브(Hub)</title>
+	<link rel="apple-touch-icon" href="../../../contents/images/favicon.png"/>
+	<link rel="shortcut icon" href="../../../contents/images/favicon.ico"/>
+
+	<link rel="stylesheet" type="text/css" href="../../../contents/src/select2/css/select2.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/grid.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/src/magnific-popup.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/src/swiper/css/swiper.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/jquery.mCustomScrollbar.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/dl_global.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/common_ui.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/formstyle.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/table.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/popup.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/ui.css">
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/jquery-ui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../contents/css/client/table.css">
+	
+
+	<script type="text/javascript" src="../../../contents/src/jquery/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript" src="../../../contents/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../../contents/js/dp_common.js"></script>
+	<script type="text/javascript" src="../../../contents/js/jquery-accessibleMegaMenu.js"></script>
+	<script type="text/javascript" src="../../../contents/js/jquery.magnific-popup.js"></script>
+	<script type="text/javascript" src="../../../contents/src/swiper/js/swiper.min.js"></script>
+	<script type="text/javascript" src="../../../contents/js/jquery.mCustomScrollbar.min.js"></script>
+	<script type="text/javascript" src="../../../contents/src/select2/js/select2.min.js"></script>
+	<script type="text/javascript" src="../../../contents/js/client/pp_common.js"></script>
+	<script type="text/javascript" src="../../../contents/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../../../contents/js/jquery.form.js"></script>
+	<script type="text/javascript" src="../../../contents/js/apexchart/apexcharts.js"></script>
+
+	<!-- validate -->
+	<script src="../../../contents/plugin/jquery-validate/js/jquery.validate-1.9.3.min.js"></script>
+	<script src="../../../contents/plugin/jquery-validate/js/dain-jquery-validator.js"></script>
+	<script src="../../../contents/plugin/jquery-validate/js/messages_ko.js"></script>
+
+	<script type="text/javascript">
+	function fnCloseLoadingImage() {
+		setTimeout(function() {
+			$("#loading").hide();
+			}, 300);
+	}
+	$(function() {
+		sessionStorage.setItem("contextRootPath", "../../..");
+		sessionStorage.setItem("sessionUserId", "");
+	});
+	</script>
+</head>
+
+<body onload="fnCloseLoadingImage()">
+	<!--[pp] ie 하위버젼 접속시 알림 -->
+	<div id="browser_alert" style="display:none;">
+		본 사이트는 익스플로러11 이상, 크롬, 오페라, 파이어폭스 브라우저등의 최신버전에 최적화 되어 있습니다.<br/>지금 사용하고 계시는 브라우저는 곧 지원이 중단되므로
+		<a href="http://windows.microsoft.com/ko-kr/internet-explorer/ie-11-worldwide-languages" target="_blank">익스플로러 최신버젼</a>으로 업그레이드하시거나 <a href="https://www.google.com/intl/ko/chrome/browser/" target="_blank">크롬</a>, <a href="http://www.opera.com/ko/computer" target="_blank" style="color:#f9c461;">오페라</a>, <a href="https://www.mozilla.org/en-US/firefox/new/?scene=2" target="_blank">파이어폭스</a>등의 최신 브라우저를 이용해 주세요.
+		<button type="button" class="browser_alert_close">닫기</button>
+	</div>
+	<!--[pp] // ie 하위버젼 접속시 알림 -->
+	<!-- [pp] 로딩중 화면 -->
+	<div id="loading" style="display: none;">
+		<p id="loading_image">
+			<img src="../../../contents/images/loading.gif" alt="Loading..."><br>
+			<span>Loading</span>
+		</p>
+	</div>
+	<!-- [pp] //로딩중 화면 -->
+	<!-- [pp] skip nav -->
+	<nav class="skip_nav">
+		<a href="#gnb_skip">주요메뉴 바로가기</a>
+		<a href="#container_skip">본문영역 바로가기</a>
+	</nav>
+	<!-- [pp] //skip nav -->
+	<!-- [pp] 푸터를 제외한 전체페이지 -->
+	
+	
+	
+	
+		
+			
+				
+					
+				
+				
+			
+		
+	
+		
+			
+				
+				
+					
+				
+			
+		
+	
+		
+			
+				
+					
+				
+				
+			
+		
+	
+		
+			
+				
+				
+			
+		
+	
+		
+			
+				
+				
+					
+				
+			
+		
+	
+		
+			
+				
+				
+					
+				
+			
+		
+	
+		
+			
+				
+				
+					
+				
+			
+		
+	
+		
+			
+				
+				
+					
+				
+			
+		
+	
+		
+			
+				
+					
+				
+				
+			
+		
+	
+		
+			
+				
+				
+					
+				
+			
+		
+	
+		
+			
+				
+				
+					
+						
+					
+				
+			
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+		
+	
+	<div class="page_wrap subpage subpage4">
+		<!-- [pp] page_toparea -->
+		<div class="page_toparea">
+			<!-- [pp] header -->
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 자기주도활동 상태 -->
+
+
+
+
+
+
+
+<!-- 자기주도활동 종류 -->
+
+
+
+
+
+
+
+
+
+<!-- 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 학생 쪽 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+<!-- 학생신청상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 동료평가 진행단계 -->
+
+
+
+
+
+<!-- 진로설계 목표 계획 구분 값 -->
+
+
+
+
+
+<!-- 진단 타입값 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 진로 및 취업 상담 -->
+
+<!-- 외국인 상담 -->
+
+<!-- 학생생활 상담소 -->
+
+<!-- 학습상담 -->
+
+<!-- 창업상담-->
+
+<!-- 경제/장학 상담 -->
+
+<!-- 현장실습 상담 -->
+
+<!-- 현장실습 상담 -->
+
+
+<!-- 방문상담 신청구분 -->
+
+
+
+
+<!-- 방문상담 신청상태 -->
+
+
+
+
+
+
+
+<!-- 온라인 상담 상태 -->
+
+
+
+
+
+
+<!-- 학생생활상담 상태 -->
+
+
+
+
+
+
+
+<!-- 성희롱.성폭력  상담 상태 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+	
+	
+	
+		
+	
+
+
+
+<!-- [pp] header -->
+<header class="header_wrap">
+	<div class="header_top grid_content">
+		<div class="login_area">
+			
+				<a href="javascript:void(0);" class="btn_login"  onclick="fnGoLoginPopUp('/clientMain/a/t/main.do');" >LOGIN</a>
+			
+			
+		</div>
+		<div class="user_info">
+			
+			<span>게스트&#40;GUEST&#41;</span>님 환영합니다.
+		</div>
+		<h1 class="main_logo">
+			<a href="../../../clientMain/a/t/main.do">
+				<img src="../../../contents/images/main_logo.svg" alt="로고">
+			</a>
+		</h1>
+		
+			
+			
+				<a href="javascript:void(0);" class="view_manual" onclick="fn_fileDownload('../../..','FLSM00000000341');">학생 매뉴얼</a>
+				<a href="javascript:void(0);" class="sitemap" onclick="fnOpenSiteMapPopUp();">
+					<span></span><span></span><span></span>
+				</a>
+				<!-- <button type="button" class="mobile_menu">
+					<span></span><span></span><span></span>
+				</button> -->
+			
+		
+		<button type="button" class="mobile_menu">
+			<span></span><span></span><span></span>
+		</button>
+	</div>
+	<div class="header_bottom">
+		<div class="grid_content">
+			<nav id="gnb_skip" class="gnb_wrap">
+				<ul class="gnb_list">
+					
+					
+					
+						
+							
+								
+								
+								
+									
+									
+										
+									
+								
+								<li class="gnb_1depth gnb02 fadeup">
+									<a href="javascript:void(0);"><span>소개</span></a>
+										<ul class="gnb_2depth">
+							
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/SystemIntro/a/m/Intro.do','MNU0000487');">아주허브&#40;AJOU Hub&#41; 소개</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+								</ul></li>
+								
+								
+									
+									
+										
+									
+								
+								<li class="gnb_1depth gnb03 fadeup">
+									<a href="javascript:void(0);"><span>진단센터</span></a>
+										<ul class="gnb_2depth">
+							
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+								
+											<li>
+												<a href="javascript:void(0);">핵심역량진단</a>
+												<ul class="gnb_3depth">
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/diag/a/m/getDiagList.do','MNU0000625');">진단하기</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/diagRslt/a/m/getDiagRslt.do','MNU0000626');">결과보기</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								</ul></li>
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/workNetDiag/a/m/getWorkNetDiagList.do','MNU0000557');">워크넷 진단</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/surveyClient/a/m/getSurveyClientList.do','MNU0000802');">설문조사</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+								</ul></li>
+								
+								
+									
+									
+										
+									
+								
+								<li class="gnb_1depth gnb04 fadeup">
+									<a href="javascript:void(0);"><span>학습활동</span></a>
+										<ul class="gnb_2depth">
+							
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/rcrProgramList/a/m/getRcrProgramMngList.do','MNU0000477');">교과정보 조회</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/ncrProgramAppl/a/m/goProgramApplList.do','MNU0000491');">비교과 신청</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/myNcrProgram/a/m/goMyProgramList.do','MNU0000496');">비교과 신청 내역</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/activity/a/m/getActList.do','MNU0000504');">자기주도활동</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/researchInfo/a/n/getResearchInfo.do','MNU0000879');">연구활동</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/onlineLearning/a/m/goOnlineLearning.do','MNU0000944');">온라인 학습법 특강 수강하기</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+								</ul></li>
+								
+								
+									
+									
+										
+									
+								
+								<li class="gnb_1depth gnb05 fadeup">
+									<a href="javascript:void(0);"><span>통합상담 센터</span></a>
+										<ul class="gnb_2depth">
+							
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/cnsIntro/a/m/getCnsIntro.do','MNU0000924');">통합상담 소개</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/profCns/a/m/getProfCnsApply.do','MNU0000005');">지도교수 코칭</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/mjrPlanCns/a/m/getMjrPlanCnsPage.do','MNU0001010');">전공설계 상담</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/learningCns/a/m/getLearningCnsApply.do','MNU0000006');">학습법 컨설팅</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/employCns/a/m/getEmployCnsApplyIntro.do','MNU0000647');">진로 취업 상담</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/startUpCns/a/m/getStartUpCnsCnsApply.do','MNU0000007');">창업상담</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/cpsLifeCns/a/m/goCpsLifeCnsApplyReg.do','MNU0000775');">심리상담</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/foreCns/a/m/getForeCnsApply.do','MNU0000646');">유학생상담</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/cnsHis/a/m/getAllCnsHisList.do','MNU0000589');">나의 상담 현황</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+								</ul></li>
+								
+								
+									
+									
+										
+									
+								
+								<li class="gnb_1depth gnb08 fadeup">
+									<a href="javascript:void(0);"><span>취업 지원</span></a>
+										<ul class="gnb_2depth">
+							
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/deptInfo/a/m/getdeptInfo.do','MNU0000947');">대학일자리플러스센터 소개</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+								
+											<li>
+												<a href="javascript:void(0);">사회진출설계</a>
+												<ul class="gnb_3depth">
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/myRoadMapSearch/a/m/goMyRoadMapSearch.do','MNU0000823');">진로탐색</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+								</ul>
+											<li>
+												<a href="javascript:void(0);">채용정보</a>
+												<ul class="gnb_3depth">
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/generalCampusCareers/a/m/getGrCampusCareersMngList.do','MNU0000778');">일반 채용정보</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/campusCareersMng/a/m/getCampusCareersMngList.do','MNU0000480');">추천 채용정보</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/outRecruitInfo/a/m/getOutRecruitInfoList.do','MNU0000865');">외부 채용정보</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/recruitInfoCal/a/m/getrecruitInfoCal.do','MNU0000866');">겁나 빠른 공채달력</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+								</ul>
+											<li>
+												<a href="javascript:void(0);">취업지원</a>
+												<ul class="gnb_3depth">
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/employInfoVideo/a/m/getEmployInfoVideo.do','MNU0000570');">직업방송 동영상</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/newsClipping/a/m/getNewsList.do','MNU0000880');">취업/창업 뉴스 클리핑</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/newsLetter/a/m/getNewsLetterList.do','MNU0000015');">취업 뉴스레터</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+								
+								</ul></li></ul></li>
+								
+									
+									
+										
+									
+								
+								<li class="gnb_1depth gnb09 fadeup">
+									<a href="javascript:void(0);"><span>마이페이지</span></a>
+										<ul class="gnb_2depth">
+							
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/mileageHis/a/m/goMileageHisList.do','MNU0000479');">마이페이지</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+								
+											<li>
+												<a href="javascript:void(0);">포트폴리오</a>
+												<ul class="gnb_3depth">
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/portfolio/a/m/getPortfolio.do','MNU0001001');">포트폴리오</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+							
+							
+													<li>
+														<a href="javascript:fnGoMoveMenu('/ablityPointHis/a/m/getAblityPointHisList.do','MNU0001002');">핵심역량현황</a>
+													</li>
+							
+						
+						
+						
+						
+						
+					
+						
+							
+								
+								</ul></li></ul></li>
+								
+									
+										
+									
+									
+								
+								<li class="gnb_1depth gnb10 fadeup">
+									<a href="javascript:void(0);"><span>커뮤니티</span></a>
+										<ul class="gnb_2depth">
+							
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/notice/a/m/getBoardList.do','MNU0000221');">공지사항</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/resource/a/m/getBoardList.do','MNU0000223');">자료실</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/faq/a/m/getBoardList.do','MNU0000387');">FAQ</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						
+						
+						
+						
+					
+						
+							
+							
+								
+								
+									
+									
+											<li>
+												<a href="javascript:fnGoMoveMenu('/socialNet/a/m/getBoardList.do','MNU0000838');">소셜넷</a>
+											</li>
+									
+								
+							
+							
+							
+						
+						</ul></li>
+						
+						
+						
+					
+				</ul>
+			</nav>
+		</div>
+	</div>
+</header>
+<!-- [pp] //header -->
+
+<form id="menuMoveForm" method="post">
+	<input type="hidden" name="menuId">
+	<input type="hidden" name="menuUrlGubun">
+</form>
+
+<script>
+$(function() {
+	setLogOutCountInit();
+});
+
+var time, cnt;
+
+// 1초 마다 interval 진행 
+function setLogOutCountInit() {
+	cnt = parseInt(1800)
+	time = setInterval("goLogOutCout()", 1000);
+}
+
+// 로그아웃 카운트 감소 및 기능 구현
+function goLogOutCout() {
+	cnt--;
+	
+	// 종료 5분  카운트
+	if(cnt == 300) {
+		// 세션 종료 5분 전 팝업 알림
+		fnAlertLogOutPopUp();
+	}
+	
+	// 카운트 = 0 경우 로그아웃 및 interval 초기화
+	if(cnt == 0) {
+		clearInterval(time);
+		location.href = "../../../login/a/n/logOut.do?loginType=CLIENT";
+	}
+}
+
+// 종료 5분 안내 팝업 페이지
+function fnAlertLogOutPopUp() {
+	var popupDivId = "#layerPopup";
+	var popupUrl = "../../../clientMain/r/n/goAlertLogOutPopUp.do";
+	var popupParams = {
+	};
+	clientLoadPopup(popupDivId, popupUrl, popupParams);
+}
+
+// 로그인 연장하기 버튼 클릭의 경우
+function fnCounterReset() {
+	// interval 초기화
+	clearInterval(time);
+	// 로그아웃 초기설정 
+	setLogOutCountInit();
+	// 5분전 로그아웃 팝업 닫기
+	$(".mfp-close").trigger("click");
+}
+
+function fnGoMoveMenu(contentsUrl, menuId) {
+	var _url = "../../.." + contentsUrl;
+	$("#menuMoveForm input[name=menuId]").val(menuId);
+	$("#menuMoveForm input[name=menuUrlGubun]").val("CLIENT_SUB");
+	$("#menuMoveForm").attr("action", _url).submit();
+}
+
+function fnLoginCehck(contentsUrl, menuName){
+	if ( confirm(menuName+"(은)는 로그인이 필요한 기능 입니다. \n"+"로그인 하시겠습니까?") ) {
+		fnGoLoginPopUp(contentsUrl);
+	}
+}
+
+
+$("#goAdminBtn").on("click", function(e) {
+	document.location.href = "../../../cmm/fms/changeClient.do";
+});
+
+
+$("#clientLogOutBtn").on("click", function(e) {
+	if(!confirm("로그아웃 하시겠습니까?")) return false;
+	location.href = "../../../login/a/n/logOut.do?loginType=CLIENT";
+});
+
+function fnOpenSiteMapPopUp() {
+	var popupDivId = "#layerPopup";
+	var popupUrl = "../../../clientMain/a/n/openSiteMapPopUp.do";
+	var popupParams = {
+	};
+	clientLoadPopup(popupDivId, popupUrl, popupParams);
+}
+clientLoadPopup = function(popupDivId, popupUrl, popupParams) {
+	if(popupUrl != null) {
+		// 해당 영역을 지우고 ajax load를 이용하여 컨텐츠를 로딩한다.
+		$(popupDivId).empty();
+
+		$(popupDivId).load(popupUrl, popupParams, function() {
+			$.magnificPopup.open({
+				items: {
+					src: popupDivId
+				}
+				, type: "inline"
+				, enableEscapeKey : false
+			});
+		});
+	}
+};
+
+$("#goModifySignIntro").on("click", function(e) {
+	document.location.href = "../../../login/a/n/goModifySignUp.do";
+});
+</script>
+			<!-- [pp] //header -->
+			<!-- [pp] 모바일버튼 클릭시 나오는 검정투명배경 -->
+			<p class="gnb_bg"></p>
+			<!-- [pp] //모바일버튼 클릭시 나오는 검정투명배경 -->
+			<!-- [pp] 상단 비주얼 영역 & lnb 영역 -->
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 자기주도활동 상태 -->
+
+
+
+
+
+
+
+<!-- 자기주도활동 종류 -->
+
+
+
+
+
+
+
+
+
+<!-- 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 학생 쪽 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+<!-- 학생신청상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 동료평가 진행단계 -->
+
+
+
+
+
+<!-- 진로설계 목표 계획 구분 값 -->
+
+
+
+
+
+<!-- 진단 타입값 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 진로 및 취업 상담 -->
+
+<!-- 외국인 상담 -->
+
+<!-- 학생생활 상담소 -->
+
+<!-- 학습상담 -->
+
+<!-- 창업상담-->
+
+<!-- 경제/장학 상담 -->
+
+<!-- 현장실습 상담 -->
+
+<!-- 현장실습 상담 -->
+
+
+<!-- 방문상담 신청구분 -->
+
+
+
+
+<!-- 방문상담 신청상태 -->
+
+
+
+
+
+
+
+<!-- 온라인 상담 상태 -->
+
+
+
+
+
+
+<!-- 학생생활상담 상태 -->
+
+
+
+
+
+
+
+<!-- 성희롱.성폭력  상담 상태 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+	
+	
+	
+		
+	
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			<div class="subTitle" id="subTitle_Div_MNU0000042" style="display: none;">
+				<!-- [pp] 상단 비주얼 영역-->
+				<div class="subpage_visual grid_content">
+					<h2>
+						소개<span></span>
+					</h2>
+				</div>
+				<!-- [pp] //상단 비주얼 영역 -->
+				<!-- [pp] lnb 영역 -->
+				<nav class="lnb_wrap fadeup">
+					<ul class="lnb_list">
+		
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="SystemIntro" href="javascript:fnGoMoveMenu('/SystemIntro/a/m/Intro.do','MNU0000487');">아주허브&#40;AJOU Hub&#41; 소개</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+			</ul></nav></div>
+			
+			<div class="subTitle" id="subTitle_Div_MNU0000450" style="display: none;">
+				<!-- [pp] 상단 비주얼 영역-->
+				<div class="subpage_visual grid_content">
+					<h2>
+						진단센터<span></span>
+					</h2>
+				</div>
+				<!-- [pp] //상단 비주얼 영역 -->
+				<!-- [pp] lnb 영역 -->
+				<nav class="lnb_wrap fadeup">
+					<ul class="lnb_list">
+		
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+			
+						<li>
+							<a href="javascript:void(0);">핵심역량진단</a>
+							<ul class="sub_lnb">
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="diag" href="javascript:fnGoMoveMenu('/diag/a/m/getDiagList.do','MNU0000625');">진단하기</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="diagRslt" href="javascript:fnGoMoveMenu('/diagRslt/a/m/getDiagRslt.do','MNU0000626');">결과보기</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			</ul></li>
+			
+				
+				
+						<li>
+							<a data-contsParam="workNetDiag" href="javascript:fnGoMoveMenu('/workNetDiag/a/m/getWorkNetDiagList.do','MNU0000557');">워크넷 진단</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="surveyClient" href="javascript:fnGoMoveMenu('/surveyClient/a/m/getSurveyClientList.do','MNU0000802');">설문조사</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+			</ul></nav></div>
+			
+			<div class="subTitle" id="subTitle_Div_MNU0000200" style="display: none;">
+				<!-- [pp] 상단 비주얼 영역-->
+				<div class="subpage_visual grid_content">
+					<h2>
+						학습활동<span></span>
+					</h2>
+				</div>
+				<!-- [pp] //상단 비주얼 영역 -->
+				<!-- [pp] lnb 영역 -->
+				<nav class="lnb_wrap fadeup">
+					<ul class="lnb_list">
+		
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="rcrProgramList" href="javascript:fnGoMoveMenu('/rcrProgramList/a/m/getRcrProgramMngList.do','MNU0000477');">교과정보 조회</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="ncrProgramAppl" href="javascript:fnGoMoveMenu('/ncrProgramAppl/a/m/goProgramApplList.do','MNU0000491');">비교과 신청</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="myNcrProgram" href="javascript:fnGoMoveMenu('/myNcrProgram/a/m/goMyProgramList.do','MNU0000496');">비교과 신청 내역</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="activity" href="javascript:fnGoMoveMenu('/activity/a/m/getActList.do','MNU0000504');">자기주도활동</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="researchInfo" href="javascript:fnGoMoveMenu('/researchInfo/a/n/getResearchInfo.do','MNU0000879');">연구활동</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="onlineLearning" href="javascript:fnGoMoveMenu('/onlineLearning/a/m/goOnlineLearning.do','MNU0000944');">온라인 학습법 특강 수강하기</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+			</ul></nav></div>
+			
+			<div class="subTitle" id="subTitle_Div_MNU0000539" style="display: none;">
+				<!-- [pp] 상단 비주얼 영역-->
+				<div class="subpage_visual grid_content">
+					<h2>
+						통합상담 센터<span></span>
+					</h2>
+				</div>
+				<!-- [pp] //상단 비주얼 영역 -->
+				<!-- [pp] lnb 영역 -->
+				<nav class="lnb_wrap fadeup">
+					<ul class="lnb_list">
+		
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="cnsIntro" href="javascript:fnGoMoveMenu('/cnsIntro/a/m/getCnsIntro.do','MNU0000924');">통합상담 소개</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="profCns" href="javascript:fnGoMoveMenu('/profCns/a/m/getProfCnsApply.do','MNU0000005');">지도교수 코칭</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="mjrPlanCns" href="javascript:fnGoMoveMenu('/mjrPlanCns/a/m/getMjrPlanCnsPage.do','MNU0001010');">전공설계 상담</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="learningCns" href="javascript:fnGoMoveMenu('/learningCns/a/m/getLearningCnsApply.do','MNU0000006');">학습법 컨설팅</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="employCns" href="javascript:fnGoMoveMenu('/employCns/a/m/getEmployCnsApplyIntro.do','MNU0000647');">진로 취업 상담</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="startUpCns" href="javascript:fnGoMoveMenu('/startUpCns/a/m/getStartUpCnsCnsApply.do','MNU0000007');">창업상담</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="cpsLifeCns" href="javascript:fnGoMoveMenu('/cpsLifeCns/a/m/goCpsLifeCnsApplyReg.do','MNU0000775');">심리상담</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="foreCns" href="javascript:fnGoMoveMenu('/foreCns/a/m/getForeCnsApply.do','MNU0000646');">유학생상담</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="cnsHis" href="javascript:fnGoMoveMenu('/cnsHis/a/m/getAllCnsHisList.do','MNU0000589');">나의 상담 현황</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+			</ul></nav></div>
+			
+			<div class="subTitle" id="subTitle_Div_MNU0000566" style="display: none;">
+				<!-- [pp] 상단 비주얼 영역-->
+				<div class="subpage_visual grid_content">
+					<h2>
+						취업 지원<span></span>
+					</h2>
+				</div>
+				<!-- [pp] //상단 비주얼 영역 -->
+				<!-- [pp] lnb 영역 -->
+				<nav class="lnb_wrap fadeup">
+					<ul class="lnb_list">
+		
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="deptInfo" href="javascript:fnGoMoveMenu('/deptInfo/a/m/getdeptInfo.do','MNU0000947');">대학일자리플러스센터 소개</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+			
+						<li>
+							<a href="javascript:void(0);">사회진출설계</a>
+							<ul class="sub_lnb">
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="myRoadMapSearch" href="javascript:fnGoMoveMenu('/myRoadMapSearch/a/m/goMyRoadMapSearch.do','MNU0000823');">진로탐색</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+			</ul></li>
+						<li>
+							<a href="javascript:void(0);">채용정보</a>
+							<ul class="sub_lnb">
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="generalCampusCareers" href="javascript:fnGoMoveMenu('/generalCampusCareers/a/m/getGrCampusCareersMngList.do','MNU0000778');">일반 채용정보</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="campusCareersMng" href="javascript:fnGoMoveMenu('/campusCareersMng/a/m/getCampusCareersMngList.do','MNU0000480');">추천 채용정보</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="outRecruitInfo" href="javascript:fnGoMoveMenu('/outRecruitInfo/a/m/getOutRecruitInfoList.do','MNU0000865');">외부 채용정보</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="recruitInfoCal" href="javascript:fnGoMoveMenu('/recruitInfoCal/a/m/getrecruitInfoCal.do','MNU0000866');">겁나 빠른 공채달력</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+			</ul></li>
+						<li>
+							<a href="javascript:void(0);">취업지원</a>
+							<ul class="sub_lnb">
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="employInfoVideo" href="javascript:fnGoMoveMenu('/employInfoVideo/a/m/getEmployInfoVideo.do','MNU0000570');">직업방송 동영상</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="newsClipping" href="javascript:fnGoMoveMenu('/newsClipping/a/m/getNewsList.do','MNU0000880');">취업/창업 뉴스 클리핑</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="newsLetter" href="javascript:fnGoMoveMenu('/newsLetter/a/m/getNewsLetterList.do','MNU0000015');">취업 뉴스레터</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+			
+			</ul></li></ul></nav></div>
+			<div class="subTitle" id="subTitle_Div_MNU0000867" style="display: none;">
+				<!-- [pp] 상단 비주얼 영역-->
+				<div class="subpage_visual grid_content">
+					<h2>
+						마이페이지<span></span>
+					</h2>
+				</div>
+				<!-- [pp] //상단 비주얼 영역 -->
+				<!-- [pp] lnb 영역 -->
+				<nav class="lnb_wrap fadeup">
+					<ul class="lnb_list">
+		
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="mileageHis" href="javascript:fnGoMoveMenu('/mileageHis/a/m/goMileageHisList.do','MNU0000479');">마이페이지</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+			
+						<li>
+							<a href="javascript:void(0);">포트폴리오</a>
+							<ul class="sub_lnb">
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="portfolio" href="javascript:fnGoMoveMenu('/portfolio/a/m/getPortfolio.do','MNU0001001');">포트폴리오</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+		
+		
+					<li>
+						<a data-contsParam="ablityPointHis" href="javascript:fnGoMoveMenu('/ablityPointHis/a/m/getAblityPointHisList.do','MNU0001002');">핵심역량현황</a>
+					</li>
+		
+	
+	
+	
+	
+	
+
+	
+		
+			
+			</ul></li></ul></nav></div>
+			<div class="subTitle" id="subTitle_Div_MNU0000220" style="display: none;">
+				<!-- [pp] 상단 비주얼 영역-->
+				<div class="subpage_visual grid_content">
+					<h2>
+						커뮤니티<span></span>
+					</h2>
+				</div>
+				<!-- [pp] //상단 비주얼 영역 -->
+				<!-- [pp] lnb 영역 -->
+				<nav class="lnb_wrap fadeup">
+					<ul class="lnb_list">
+		
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="notice" href="javascript:fnGoMoveMenu('/notice/a/m/getBoardList.do','MNU0000221');">공지사항</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="resource" href="javascript:fnGoMoveMenu('/resource/a/m/getBoardList.do','MNU0000223');">자료실</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="faq" href="javascript:fnGoMoveMenu('/faq/a/m/getBoardList.do','MNU0000387');">FAQ</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	
+	
+	
+	
+
+	
+		
+		
+			
+			
+				
+				
+						<li>
+							<a data-contsParam="socialNet" href="javascript:fnGoMoveMenu('/socialNet/a/m/getBoardList.do','MNU0000838');">소셜넷</a>
+						</li>
+				
+			
+		
+		
+		
+	
+	</ul></nav></div>
+	
+	
+	
+
+
+<script type="text/javascript">
+//선택 메뉴 불들어오게 하기
+$(function() {
+	var path = window.location.pathname;
+	var tempArry = [];
+	tempArry = path.split('/');
+
+	// 설정된 path값에 따른 메뉴 on
+	$(".subTitle").find("li > a").each(function(){
+		if( $(this).attr("data-contsParam") == tempArry[1] ){
+			$(this).parent('li').addClass("on");
+			$(this).addClass("on");
+
+			if ("true" == "true") {
+				$(this).parent("li").parent("ul").parent("li").addClass("on");
+			}
+			$(this).parents(".subTitle").show();
+		}
+	});
+});
+</script>
+
+			<!-- [pp] //상단 비주얼 영역 & lnb 영역 -->
+		</div>
+		<!-- [pp] //page_toparea -->
+		<!-- [pp] 서브페이지 컨텐츠 영역 -->
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 자기주도활동 상태 -->
+
+
+
+
+
+
+
+<!-- 자기주도활동 종류 -->
+
+
+
+
+
+
+
+
+
+<!-- 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 학생 쪽 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+<!-- 학생신청상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 동료평가 진행단계 -->
+
+
+
+
+
+<!-- 진로설계 목표 계획 구분 값 -->
+
+
+
+
+
+<!-- 진단 타입값 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 진로 및 취업 상담 -->
+
+<!-- 외국인 상담 -->
+
+<!-- 학생생활 상담소 -->
+
+<!-- 학습상담 -->
+
+<!-- 창업상담-->
+
+<!-- 경제/장학 상담 -->
+
+<!-- 현장실습 상담 -->
+
+<!-- 현장실습 상담 -->
+
+
+<!-- 방문상담 신청구분 -->
+
+
+
+
+<!-- 방문상담 신청상태 -->
+
+
+
+
+
+
+
+<!-- 온라인 상담 상태 -->
+
+
+
+
+
+
+<!-- 학생생활상담 상태 -->
+
+
+
+
+
+
+
+<!-- 성희롱.성폭력  상담 상태 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+	
+	
+	
+		
+	
+
+
+
+
+<!-- [pp] subpage 컨텐츠영역 -->
+<form id="insertForm" method="post"  action="" enctype="multipart/form-data">
+<input type="hidden" name="programGubun" id="programGubun" value="ncrProgramAppl">
+<input type="hidden" name="npiKeyId" value="NCR000000002055">
+<input type="hidden" name="npiTeamYn" id="npiTeamYn" value="NCR_T02_C02">
+<input type="hidden" name="npsTeamCd" value="">
+<input type="hidden" name="npiApplyFileYn" value="Y">
+<input type="hidden" name="npiApplyMustYn" value="Y">
+<input type="hidden" name="npiPreRschYn" value="N">
+<input type="hidden" name="npsPreRschYn" value="">
+<input type="hidden" name="npsSatisRschYn" value="">
+<input type="hidden" name="npsKeyId" value="">
+<input type="hidden" name="preSgmKeyId" value="">
+<input type="hidden" name="npiTMaxCnt" value="5">
+<input type="hidden" name="npsTeammate" value="">
+<input type="hidden" name="viewType" value="">
+<input type="hidden" name="npiPartiDeptCd" value="">
+<input type="hidden" name="regId" value="202510296">
+<input type="hidden" name="npsStdNo" value="">
+<input type="hidden" name="regDate" value="2025-06-16 17:56:04.0">
+<input type="hidden" name="npiGradeLimit" value="1,2,3,4,5,6">
+<input type="hidden" name="npiReadbookProgramYn" value="N">
+<input type="hidden" name="npsState" value="">
+<input type="hidden" name="npscKeyId" value="">
+<input type="hidden" name="reApplication" value="hello">
+
+<section id="container_skip" class="contents_wrap fadeup" tabindex="0">
+	<div class="grid_content">
+	<section class="program_content">
+		<div class="program_contentbox program_leftbox">
+			<div class="program_contentimg">
+				
+					
+					
+						
+						
+						
+						
+						
+					
+					
+					<!-- 신청대기  wait-->
+					<!-- 모집중, 대기신청가능 apply-->
+					<!-- 운영중 progress-->
+					<!-- 신청마감, 운영종료, 관리자취소, 폐지, 신청불가 end-->
+					
+						
+						
+						
+						
+						
+					
+				
+				
+				
+					
+						
+						
+							<span class="limited_label end">운영종료</span>
+							
+							<span class="mileage_label">-</span>
+							<span class="ability_label creativity">창의성</span>
+						
+					
+				
+				
+
+				
+				
+					
+						
+						<p class="previewimg_box normal">
+							<img src="/files/PROGRAM/5a48aa35-0a97-4926-a522-6e15afca5a941750064164536.jpg" alt="비교과 프로그램 대표이미지"
+							 
+								
+								
+								onerror="this.src='../../../contents/images/client/sub/bg_program_capa3.png'" 
+								
+								
+								
+							
+						  >
+						</p>
+					
+				
+					
+				
+				
+
+			</div>
+		</div>
+		<dl class="program_contentbox program_rightbox">
+			<dt>
+				<span>
+				<i>학습역량 강화</i>〉
+				<i>자율활동</i>〉
+				<i>교내.교외</i>
+				</span><br>2025 하계 모각소(모여서 각자 소프트웨어 하자)
+				<p>
+					AI융합교육원,소프트웨어융합대학교학팀
+				</p>
+			</dt>
+			<dd>
+				<strong>프로그램 구분</strong>선발형
+			</dd>
+			<dd>
+				<strong>모집기간</strong>2025-06-23 00 : 00 ~ 2025-06-30 00 : 00
+			</dd>
+			<dd>
+				<strong>활동기간</strong>2025-07-07 00 : 00 ~ 2025-08-24 23 : 50
+			</dd>
+			<dd>
+				<strong>참여 학과/학부</strong>
+				
+
+				
+					모든과
+				
+			</dd>
+			<dd>
+				<strong>참여학년</strong>1,2,3,4,5,6 학년
+			</dd>
+
+			<dd id="shregLimitDd">
+				<strong>참여대상</strong>-
+			</dd>
+			<dd>
+				<strong>장소</strong>-
+			</dd>
+			<dd>
+				<strong>실시유형</strong>기타(입력)
+			</dd>
+			<dd>
+				
+				
+				
+				<strong>운영부서</strong>AI융합교육원 / null
+				<br/>소프트웨어융합대학교학팀 
+				<br/>
+			</dd>
+			<dd>
+				<strong>문의전화</strong>031-219-3072
+			</dd>
+		</dl>
+		<p class="program_btnarea">
+			<span id="favCnt">4</span><button type="button" id="falBtn_0" class="btn btn_addlike " title="찜하기">찜하기</button>
+		</p>
+	</section>
+	<section  class="section_area">
+		<h4 class="section_tit_md">신청인원 현황</h4>
+		<div class="join_count_wrap">
+			<div class="countbox_left">
+				<strong>모집인원</strong>
+				<div class="program_joincount green">
+					
+						
+					<p class="wd_p0"></p><span>173 명/제한없음</span>
+						
+						
+					
+
+				</div>
+			</div>
+			<div class="countbox_right">
+				<strong>대기인원</strong>
+				<div class="program_joincount orange">
+					
+						
+					<p class="wd_p0"></p><span>0 명/제한없음</span>
+						
+						
+					
+
+				</div>
+			</div>
+		</div>
+		
+			
+			
+				
+				<!-- [pp] 2022.03.29 선발형 문구 추가 -->
+					<p class="selection_txt">
+						해당 프로그램은 선발형입니다. 모집인원 현황과 상관없이 참가신청(대기신청)해주시면 됩니다.
+					</p>
+				<!-- [pp] //2022.03.29 선발형 문구 추가 -->
+				
+			
+		
+		
+	</section>
+
+	<section class="section_area">
+		<div class="grid_row">
+			<div class="grid_col col_xl_6 col_md_6">
+				<h4 class="section_tit_md">마일리지</h4>
+				<div class="picture_box text">
+					<div>
+						<p>마일리지 </p>
+						<strong><i class="left"></i><span>40점</span><i class="right"></i></strong>
+<!-- 						<strong><i class="left"></i><span>- 점</span><i class="right"></i></strong> -->
+					</div>
+				</div>
+			</div>
+			<div class="grid_col col_xl_6 col_md_6">
+				<h4 class="section_tit_md">역량점수</h4>
+				<div class="picture_box">
+					<div id="ablityDountGraphDiv" class="wd_p80" >
+					</div>
+					<div class="boxloading" id="ablityDountGraphLoadingBox">
+						<img src="../../../contents/images/boxloading.gif" alt="로딩중입니다.">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="section_area">
+		<div class="grid_row">
+			<div class="grid_col col_xl_6 col_md_6">
+				<h4 class="section_tit_md">신청자 현황</h4>
+				
+
+				
+					<div class="picture_box">
+						<div id="applyStdStateDiv"></div>
+						<div class="boxloading" id="applyStdStateDivGraphLoading">
+							<img src="../../../contents/images/boxloading.gif" alt="로딩중입니다.">
+						</div>
+					</div>
+				
+			</div>
+			<div class="grid_col col_xl_6 col_md_6">
+				<h4 class="section_tit_md">신청자 평균 역량</h4>
+				
+				
+				<div class="nonsubjgraph_box picture_box" id="applyStdAvgAbilityDiv"></div>
+				
+			</div>
+		</div>
+	</section>
+
+	<section class="section_area">
+		<h4 class="section_tit_md">교육 내용 및 운영방법</h4>
+		<div class="adit_content editor_area"><p style="margin-left:10.0pt"><strong>1. 지원대상 : 3~5명으로 구성</strong>된 자발적 학습, 프로그래밍 팀</p>
+
+<p style="margin-left:10.0pt">가. <strong>2025-2학기 기준</strong> 소프트웨어융합대학 <strong>재학생(복수전공, 인공지능융합학과 포함)</strong></p>
+
+<p style="margin-left:10.0pt">나. 동아리 구성원 각자의 목적이 달라도 가능</p>
+
+<p style="margin-left:10.0pt">다. 프로그래밍, 스터디, 공모전 등 전공 관련 도전 활동으로 제한</p>
+
+<p style="margin-left:10.0pt"><strong>2. 세부일정</strong></p>
+
+<p style="margin-left:10.0pt">가. 모집기간 : 2025.06.23.(월) 00:00 ~ 2024.12.29.(일) 23:59</p>
+
+<p style="margin-left:10.0pt">나. 활동안내 : 2025.07.04.(금) 11:00, 온라인(ZOOM)(팀당 최소 1인 필수 참석)</p>
+
+<p style="margin-left:10.0pt">다. 활동기간 : 2025.07.07.(월) ~ 2025.08.24.(일)</p>
+
+<p style="margin-left:10.0pt">※ 아주대 모각소 활동 기록 둘러보기: <a href="https://sites.google.com/ajou.ac.kr/mks"><u>https://sites.google.com/ajou.ac.kr/mks</u></a></p>
+
+<div id="hwpEditorBoardContent">&nbsp;</div>
+</div>
+	</section>
+
+	
+	<section class="section_area">
+		<h4 class="section_tit_md">신청 시 주의사항</h4>
+		<div class="adit_content">
+			<p style="margin-left:10.0pt"><img alt="" src="http://hub.ajou.ac.kr:80/files/EDITOR/d59499fb-f556-4bac-9298-b394f51e8d9a1750122255615.jpg" style="height:1131px; width:800px" /></p>
+
+<p style="margin-left:10.0pt"><strong>1. 의무사항</strong></p>
+
+<p style="margin-left:10.0pt"><strong>가. 팀&nbsp;구성 : 팀당 3~5인</strong></p>
+
+<p style="margin-left:10.0pt">&nbsp;※ 단, 모임 2회 이상 결석 시에는 결석자(팀원) 탈락(팀원이 1인만 남게 될 경우 팀 전체 탈락)</p>
+
+<p style="margin-left:10.0pt">&nbsp;※ 단, 팀원 탈락 시에는 SW융합교육원(hj8809@ajou.ac.kr)에 즉시 보고</p>
+
+<p style="margin-left:10.0pt"><strong>나. 모임 횟수 : 총 5회 이상(단, 주차별&nbsp;1회만 인정)</strong></p>
+
+<p style="margin-left:10.0pt">- 활동 기간(7주) 중에서 총 5회 이상(주차별&nbsp;1회, 회차별 3시간 이상 진행)</p>
+
+<p style="margin-left:10.0pt">- (필요 시) 팔달관 317호, 334호 자유롭게 이용 가능</p>
+
+<p style="margin-left:10.0pt"><strong>다. 모임 유형 : 오프라인 모임이 원칙이나 온라인 모임도 허용</strong></p>
+
+<p style="margin-left:10.0pt">※ 단, 온라인 모임 시에는&nbsp;캡쳐본 증빙 필수</p>
+
+<p style="margin-left:10.0pt">라. 모임 목적 : 프로그래밍, 스터디, 공모전 등 전공 관련 도전 활용하기</p>
+
+<p style="margin-left:10.0pt"><strong>마. 모임 기록 : 팀 활동 모임 종료 후 24시간 이내 회차별 블로그 기록</strong>(활동 내용, 모임 사진 등 전체공개 필수)</p>
+
+<div id="hwpEditorBoardContent">&nbsp;</div>
+
+<div>
+<p style="margin-left:10.0pt"><strong>2. 신청 방법</strong></p>
+
+<p style="margin-left:10.0pt">가. <strong>아주허브를 통하여 신청</strong> 접수(신청서 첨부 필수)</p>
+
+<p style="margin-left:10.0pt">나. 활동 계획 및 예상 성과를 평가하여 선정 예정</p>
+
+<p style="margin-left:10.0pt">&nbsp;</p>
+
+<p style="margin-left:10.0pt"><strong>3. 신청서 작성 요령</strong></p>
+
+<p style="margin-left:10.0pt">가. 팀 활동 기록 URL : 신청서 양식 하단 확인 필수</p>
+
+<p style="margin-left:10.0pt">나. 참여자 정보 : 대표 학생 포함 팀원 전체 입력</p>
+
+<p style="margin-left:10.0pt">다. 학적 상태 : 2025-2학기 기준으로 입력</p>
+
+<p style="margin-left:10.0pt">※ 모각소 홈페이지 썸네일, 학생 개별 활동 기록</p>
+
+<div id="hwpEditorBoardContent">&nbsp;</div>
+</div>
+
+		</div>
+	</section>
+	<section class="section_area">
+		<h4 class="section_tit_md">지원 혜택</h4>
+			<div class="adit_content">
+			<p><p style="margin-left:10.0pt"><strong>1. 장소 지원 : 팔달관 317호, 334호(단, 일정에 따라 장소 공간은 변경될 수 있음)</strong></p>
+
+<p style="margin-left:10.0pt"><strong>2. 활동 지원(공통 사항 : 수료자에 한함)</strong></p>
+
+<p style="margin-left:10.0pt">가. <strong>활동비 지급</strong> : 총 50,000원(1인 기준)</p>
+
+<p style="margin-left:10.0pt">- 지급 대상 : 활동 내역을 기록한 팀에 한하여 지급함</p>
+
+<p style="margin-left:10.0pt">- 지급 계획 : (최종 발표 이후) 활동비 신청자에게 일괄 지급</p>
+
+<p style="margin-left:10.0pt">나. <strong>수료증 발급</strong></p>
+
+<p style="margin-left:10.0pt">다. <strong>우수팀 시상</strong> : 상장(SW융합교육원장상) 및 상금 지급</p>
+
+<p style="margin-left:10.0pt">※ 시상 규모는 결과보고서 및 발표자료 제출 팀 수에 따라 확정 예정임</p>
+
+<div id="hwpEditorBoardContent">&nbsp;</div>
+</p>
+		</div>
+	</section>
+
+	<section class="section_area">
+		
+		
+		<h4 class="section_tit_md">신청하기</h3>
+		
+		<p class="tip_txt">
+			프로그램 상세내용을 확인하고 신청서 양식을 다운로드하여 비교과 프로그램 신청서를 작성해 주세요.
+		</p>
+		<div class="progrmaapply_box">
+			<div class="adit_top mg_b20">
+				
+					
+					
+				<p><span></span>과제물 양식 다운로드</p>
+					
+				
+				
+				
+				
+					
+				
+					
+					
+					<a href="javascript:void(0);" class="filedown_link" title="파일 다운로드" onclick="fn_fileDownload('../../..','FLS000000022332');">(양식)2025 하계 모각소 신청서.hwp</a>
+					
+				
+				
+				<input type="hidden" id="applyFileCnt" value="2">
+			</div>
+			<ul>
+				
+				<li>
+					<strong>팀 인원수</strong>
+					3~5명 &#40;팀 리더를 포함한 인원수 입니다.&#41;
+				</li>
+				
+				<li>
+					<strong>팀명</strong>
+					<input type="text" class="form_style bo_gray wd_p100" placeholder="팀명을 입력하세요." onkeyup="chkByte(this, 300);" 
+						title="팀명" name="npsTeamNm" id="npsTeamNm" 
+						value=""
+						
+						>
+				</li>
+				<li>
+					<strong>팀원 추가</strong>
+					<div>
+						
+							<button type="button" class="btn btn_md btn_circle btn_default" onclick="fnTeammatePopUp();">팀원 추가</button>
+						
+						
+						<div class="member_list" id="detailTeammate">
+
+							
+							
+							
+							
+						</div>
+					</div>
+				</li>
+				
+				
+				
+				<li class="fileattach_box">
+					
+						
+						
+							<strong>신청서 첨부</strong>
+							<p>다운받은 신청서 양식을 작성하여 업로드해주세요.</p>
+						
+					
+					<div class="attach_file_wrapper pd_0 bg_white apply_file" id="attach_file_box_Div">
+					
+						
+							
+							
+							
+								<div class="file_thumbnail attach_file" >
+									
+									<input type="hidden" name="STD_NCR_APPLY_idx" id="STD_NCR_APPLY_idx" value="1" >
+									<input type="file" name="STD_NCR_APPLY" id="STD_NCR_APPLY" onchange="fnOnChangeFileNm(this,'Y','5','','CLIENT')">
+									<label class="attach_text"  for="STD_NCR_APPLY" id="STD_NCR_APPLY_label">파일첨부</label>
+									
+									<p>파일 첨부</p>
+								</div>
+							
+						
+						
+						
+					</div>
+				</li>
+				
+				
+			</ul>
+		</div>
+		<p class="mg_t5 font_red">※ 신청한 비교과프로그램은 "비교과 내역"에서 조회할 수 있습니다.</p>
+	</section>
+
+	
+	
+	<section class="section_area">
+		<h4 class="section_tit_md">참여일 선택</h4>
+		<div class="progrmaapply_box">
+			<div class="tbl tbl_col tbl_fixed tbl_date scrollx_tbl_xs">
+				<table>
+					<caption>참여일 선택</caption>
+					<colgroup>
+						<col style="width: auto;">
+						<col style="width: 130px;">
+						<col style="width: 130px;">
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="col" class="bold">참여시간</th>
+							<th scope="col" class="bold">신청인원/정원</th>
+							<th scope="col" class="bold">신청</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+						<tr class=" ">
+							<th scope="row">
+								2025-07-07 00시 00분 ~ 2025-08-24 23시 50분
+							</th>
+							<td>
+								
+									
+								<span class="count">173</span>/<span class="total">제한없음</span>
+									
+									
+								
+							</td>
+							<td>
+								
+
+								<!-- 신청화면일 경우 -->
+								
+								
+								<p class="check_row">
+									<input type="checkbox" name="npscKeyIdArr" id="check0" hidden value="NPSC000000010911"  disabled>
+									<label for="check0"></label>
+								</p>
+								
+
+								<!-- 신청내역화면일 경우 -->
+								
+
+								
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+	
+	
+
+	
+	<section class="section_area">
+		<h4 class="section_tit_md">첨부파일</h4>
+		<div class="adit_top bo_rd10">
+			<p><span></span>다운로드</p>
+			
+				
+			
+				
+			
+		</div>
+	</section>
+
+	
+
+
+	
+	
+
+	
+	
+	<div class="page_footer">
+		
+			
+			
+				
+					
+					
+				
+			
+				
+			
+		
+		
+		
+		<button type="button" class="btn btn_circle btn_lg btn_orange" onclick="fnGoList()">목록보기</button>
+	</div>
+</div>
+</section>
+</form>
+
+<form id="listForm" method="post">
+</form>
+
+<form id="detailForm" method="post">
+	<input type="hidden" id="npsKeyId" name="npsKeyId" value="">
+	<input type="hidden" id="npiKeyId" name="npiKeyId" value="">
+	<input type="hidden" id="viewType" name="viewType" value="">
+	<input type="hidden" id="moveType" name="moveType" value="">
+</form>
+<form id="attachForm" method="post">
+	<input type="hidden" id="npsKeyId" name="npsKeyId" value="">
+</form>
+
+<script type="text/javascript" src="../../../contents/js/ncr/fn_ncr_merge.js"></script>
+<script type="text/javascript">
+
+var teamStdNoPopArry = [];
+var teamStdNoDetailArry = [];
+
+$(document).ready( function() {
+	var dataArry = [];
+	var categoriesArry = [];
+	var ablityScoreArry = [];
+
+	
+
+
+	if ('2025' <= 2019) {
+		
+			categoriesArry.push("감수성");
+		
+			categoriesArry.push("소통력");
+		
+			categoriesArry.push("창의성");
+		
+			categoriesArry.push("사고력");
+		
+			categoriesArry.push("개방성");
+		
+			categoriesArry.push("문제해결역량");
+		
+			categoriesArry.push("자기관리역량");
+		
+			categoriesArry.push("정보통신역량");
+		
+
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+			
+			ablityScoreArry.push(parseInt('10'));
+		
+			
+			ablityScoreArry.push(parseInt('90'));
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+
+
+	} else {
+		
+			categoriesArry.push("감수성");
+		
+			categoriesArry.push("소통력");
+		
+			categoriesArry.push("창의성");
+		
+			categoriesArry.push("사고력");
+		
+			categoriesArry.push("개방성");
+		
+
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+			
+			ablityScoreArry.push(parseInt('10'));
+		
+			
+			ablityScoreArry.push(parseInt('90'));
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+			
+			ablityScoreArry.push(parseInt('0'));
+		
+	}
+
+	fnDetailViewAblityDountGraph(ablityScoreArry, categoriesArry);
+	fnDetailViewAblityGraph("myScoreDiv", dataArry, categoriesArry);
+
+	
+	if ('173' > 0) {
+		dataArry = [];
+		var dataSize="2"
+		var dataCd = '';
+
+		
+
+			var perDataArry = [];
+			dataCd = '1'
+			if('0' == 1){
+				perDataArry.push('1.9');
+				perDataArry.push('16');
+				perDataArry.push('32.1');
+				perDataArry.push('50');
+				perDataArry.push('0');
+				perDataArry.push('0');
+			}else{
+				perDataArry.push('-'+'1.9');
+				perDataArry.push('-'+'16');
+				perDataArry.push('-'+'32.1');
+				perDataArry.push('-'+'50');
+				perDataArry.push('-'+'0');
+				perDataArry.push('-'+'0');
+			}
+
+			dataArry.push({name: '남성', data: perDataArry  });
+		
+
+			var perDataArry = [];
+			dataCd = '2'
+			if('1' == 1){
+				perDataArry.push('0');
+				perDataArry.push('16.4');
+				perDataArry.push('19.4');
+				perDataArry.push('64.2');
+				perDataArry.push('0');
+				perDataArry.push('0');
+			}else{
+				perDataArry.push('-'+'0');
+				perDataArry.push('-'+'16.4');
+				perDataArry.push('-'+'19.4');
+				perDataArry.push('-'+'64.2');
+				perDataArry.push('-'+'0');
+				perDataArry.push('-'+'0');
+			}
+
+			dataArry.push({name: '여성', data: perDataArry  });
+		
+
+		if(dataSize == '1'){
+			var perDataArry = [];
+			perDataArry.push(-0);
+			perDataArry.push(-0);
+			perDataArry.push(-0);
+			perDataArry.push(-0);
+			perDataArry.push(-0);
+			perDataArry.push(-0);
+			var dataName=""
+			if(dataCd == '1'){
+				dataName='여성'
+			}else{
+				dataName='남성'
+			}
+			dataArry.push({name: dataName, data: perDataArry  });
+
+		}
+
+		fnApplyStdStateGraph("applyStdStateDiv", dataArry, categoriesArry);
+		fnApplyStdAvgAbilityGraph();
+	}
+
+	if("" == 'INSERT'){
+		teamStdNoDetailArry.push("");
+	}
+	
+	
+	
+	//strong, em 태그 스타일 적용
+	if($('.adit_content')) {
+			$('.adit_content p strong').css("font-weight", "bold");
+			$('.adit_content p em').css("font-style", "italic");
+	}
+
+	$.browser = {};
+	var _url = '../../../ncrProgramAppl/a/n/createProgramReqStd.do';
+		$("#insertForm").ajaxForm(
+				{
+					url : _url,
+					type : "POST",
+					async : false,
+					dataType : "json",
+					success : fnShowResult,
+					clearForm : false,
+					resetForm : false,
+					semantic : false,
+					error : function(_xmlHttpRequest, _stateMessage, _errorObject) {
+						alert("code:"+_xmlHttpRequest.status+"\n\n비교과 신청에 실패하였습니다.(1) \n잠시후 다시 시도해주세요.");
+					}
+				});
+		$("#insertForm").submit(function() { return false;});
+
+	
+	if('1,2' != ''){
+		var html = '1,2';
+		html = html.replace("1","재학생");
+		html = html.replace("2","휴학생");
+		html = html.replace("6","졸업생");
+		html = html.replace("out","외부인");
+		html = html.replace("grad","대학원생");
+		html = html.replace(",",", ");
+		html = '<strong>참여대상</strong>'+html;
+		$("#shregLimitDd").html(html);
+	}
+});
+
+function fnShowResult(res, stateMessage) {
+	
+	var npiTeamYn = $('input[name=npiTeamYn]').val();
+	if (npiTeamYn == 'NCR_T02_C02') {
+		var tStdNo = "";
+		if(res.rstMap.sts == "SUCCESS_WAIT"){
+			alert("대기신청이 완료되었습니다.");
+			console.log("대기신청으로 신청 완료");
+			fnGoApplyList('MODIFY');
+		}else if(res.rstMap.sts == "SUCCESS_TEAM_CANCEL"){
+			alert("취소가 완료되었습니다.");
+			fnGoApplyList('MODIFY');
+		}else if(res.rstMap.sts == "SUCCESS_MODIFY"){
+			alert("수정이 완료되었습니다.");
+			fnGoApplyList('MODIFY');
+		}else{
+			for (var i = 0; i < res.rstMap.rstList.length; i++) {
+				tStdNo = tStdNo + "," + res.rstMap.rstList[i].npsStdNo;
+			}
+			if (res.rstMap.sts == "SUCCESS_APL") {
+				alert("신청이 완료되었습니다.\n("+tStdNo.substring(1)+")");
+				fnGoApplyList('MODIFY');
+			}else if(res.rstMap.sts == "FAIL_APL_FAIL"){
+				alert("신청에 실패하였습니다. 모집인원을 확인해 주세요.\n("+tStdNo.substring(1)+")");
+			}
+		}
+
+	}else{
+		
+		console.log(res);
+		if( res.rstMap.sts == "SUCCESS_APL" || res.rstMap.sts == "SUCCESS_WAIT" || res.rstMap.sts == "SUCCESS_CANCEL") {
+			
+			if(res.rstMap.sts == "SUCCESS_APL"){
+				alert("신청이 완료되었습니다.");
+				console.log("승인대기로 신청 완료");
+			}else if(res.rstMap.sts == "SUCCESS_WAIT"){
+				alert("대기신청이 완료되었습니다.");
+				console.log("대기신청으로 신청 완료");
+			}else if(res.rstMap.sts == "SUCCESS_CANCEL"){
+				alert("취소가 완료되었습니다.");
+			}
+			fnGoApplyList('MODIFY');
+
+		
+		}else if(res.rstMap.sts == "FAIL_APL_DONE" ) {
+			alert("이미 신청한 프로그램입니다.");
+		}else if (res.rstMap.sts == "FAIL_APL" ){
+			alert("모집인원 및 대기인원이 전부 찼습니다. 다른 프로그램을 신청해주세요.");
+		}else if (res.rstMap.sts == "SUCCESS_MODIFY"){
+			alert("수정이 완료되었습니다.");
+		}else {
+			alert("신청에 실패하였습니다. 잠시후 다시 시도해 주세요.");
+		}
+	}
+}
+
+
+function fnInsertPreData() {
+	var isPass = true;
+	$(".target").each(function() {
+		var _obj = $(this);
+		var _qusType = _obj.attr("qusType");
+		if(_qusType == "open") {
+			if(_obj.find("textarea[name$=ssaAnsCont]").val().length == 0) {
+				isPass = false;
+			}
+		} else {
+			if(_obj.find("input[name$=ssaAnsScore]:checked").length < 1) {
+				isPass = false;
+			}
+		}
+	});
+
+	
+	if(!isPass) {
+		alert("설문 항목을 모두 입력해 주십시오.");
+		return;
+	}
+
+	if ( confirm("사전 조사를 제출하시겠습니까?\n제출 후 수정이 불가합니다.") ) {
+		fnInsertPreRschStdData();
+	}
+}
+
+
+function fnInsertPreRschStdData(sts) {
+		
+		var formData = $("#programSatisForm").serialize();
+		$.ajax({
+			url : "../../../ncrProgramAppl/a/n/createPreRschProgramReqStd.do"
+			, type : "post"
+			, cache : false
+			, async : false
+			, data : formData
+			, success : function(res) {
+				if( res.isSuccess) {
+					$("#insertForm").submit();
+					
+				}else {
+					alert("신청에 실패하였습니다.\n잠시후 다시 시도해 주세요.");
+				}
+			}
+			, error : function(_xmlHttpRequest, _stateMessage, _errorObject) {
+				console.log(_xmlHttpRequest);
+				console.log(_stateMessage);
+				console.log(_errorObject);
+				rtnFlag = false;
+			}
+		});
+}
+
+
+function fnStdProgramApply(_viewType) {
+	var tMinCnt = parseInt('3');
+	var tMemCnt = $('#detailTeammate').children('p').length;
+	var mateId = [];
+	var mateStdNo = [];
+	var mateAllId = '';
+	var isSuccess = true;
+
+	if ("" == null || "" == '') {
+		alert("로그인 후 신청가능합니다.");
+		fnGoLoginPopUp("../../../"+"ncrProgramAppl"+"/a/m/getProgramDetail.do?npiKeyId="+"NCR000000002055&viewType="+"");
+		return false;
+	}
+
+	if ("" != 'STD') {
+		alert("교직원 및 외부 사용자는 신청이 불가능 합니다.");
+		return false;
+	}
+
+	if(_viewType == null){
+		var unfaithYn = "";
+		var oprtDeptCd = 'DS990707,DS03014001';
+		console.log(oprtDeptCd);
+		
+		if(unfaithYn == 'Y' && oprtDeptCd == 'DS0517'){
+			alert("관리자에게 문의하여 불성실 참여자 해제한 이후, 신청이 가능합니다.");
+			return false;
+		}
+	}
+
+	
+	if(!"".startsWith("DS04") && "" != ''){
+		var npiPartiDeptCd = "".split(",");
+		var applCnt = 0;
+
+		for(var i=0; i<npiPartiDeptCd.length;i++){
+			if(npiPartiDeptCd[i] == ""){
+				applCnt++;
+			}
+		}
+
+		if(applCnt == 0){
+			alert("참여학과/학부 대상이 아닙니다. 참여학과/학부를 확인해주세요.");
+			return false;
+		}
+	}
+
+	
+	if (_viewType != 'CANCEL') {
+		
+		if ($("#insertForm input[name=npiApplyFileYn]").val() == 'Y' && $("#insertForm input[name=npiApplyMustYn]").val() == 'Y') {
+			
+			if ($('.apply_file').children('div .file_thumbnail').length <= 1 ) {
+				alert('신청서를 제출해야 신청이 가능합니다.');
+				return false;
+			}
+		}
+		if ($("#insertForm input[name=npiApplyMustYn]").val() == 'Y' && _viewType != 'MODIFY') {
+			if ($('.apply_file').children('div .file_thumbnail').length < $('#applyFileCnt').val()) {
+				
+				alert('신청서를 최소'+ ($('#applyFileCnt').val()-1)+'개 이상 제출해야 신청이 가능합니다.');
+				return false;
+			}
+		}
+
+		if( $("#insertForm input[name=npiTeamYn]").val() == 'NCR_T02_C02') {
+			if (tMemCnt < tMinCnt ) {
+				alert("팀 인원은 최소 "+tMinCnt+"명 이상이어야 합니다.");
+				return false;
+			}
+		}
+
+		
+		if( $("#insertForm input[name=npiTeamYn]").val() == 'NCR_T02_C02') {
+			if(!$("#insertForm input[name=npsTeamNm]").emptyCheck()) return; // 팀명
+		}
+
+		if('Y' != "Y"){
+			
+			if( $("#insertForm input[name=npiTeamYn]").val() == 'NCR_T02_C02') {
+				var num = parseInt('173') - 0 + tMemCnt;
+				if(num > parseInt('0')){
+					alert("모집인원을 초과하였습니다.\n모집인원을 확인해 주세요.");
+					return false;
+				}
+			}
+		}
+
+		if( $("#insertForm input[name=npiTeamYn]").val() == 'NCR_T02_C02') {
+			var programGubun = $('#programGubun').val();
+			
+			$.ajax({
+				type : "POST"
+				, url : "../../../ncrProgramAppl/r/n/chkProgramTeamNmAjax.do"
+				, cache : false
+				, async : false
+				, dataType : "json"
+				, data : {
+					npiKeyId : 'NCR000000002055'
+					,npsTeamNm : $('#insertForm input[name=npsTeamNm]').val()
+					,hasNpsTeamNm : ''
+					,viewType : _viewType
+				}
+				, success : function( res ) {
+					if( parseInt(res.chkCnt) > 0 ) {
+						alert("이미 사용 중인 팀명입니다.");
+						isSuccess = false;
+					}
+				}
+			});
+			if (!isSuccess) { return false; }
+		}
+
+		
+		
+		if ($("input[name='npscKeyIdArr']:checked" ).length < 1) {
+			alert("참여일을 선택해 주세요.");
+			return false;
+		}else{
+			$("#insertForm input[name='npscKeyId']").val($("input[name='npscKeyIdArr']:checked" ).val());
+		}
+		
+	}
+
+	
+	$('#detailTeammate').children('p').each(function() {
+		if (mateAllId == '') {
+			mateAllId = $(this).attr('id');
+		}else {
+			mateAllId = mateAllId +","+ $(this).attr('id');
+		}
+	})
+
+	$('#insertForm input[name=npsTeammate]').val(mateAllId);
+	$('#insertForm input[name=viewType]').val(_viewType);
+
+	var insertFormData = $("#insertForm")[0];
+	var formData = new FormData(insertFormData);
+
+	if (_viewType == 'MODIFY' || _viewType == 'CANCEL') {
+		fnStdProgramModify(formData,_viewType);
+	}else if(_viewType == 'REAPPLICATION'){
+		
+		
+		if( 'N' == 'Y') {
+			fnPreSurveyPopUp();
+
+		} else {
+			if (confirm("재신청하시겠습니까?")) {
+				$("#insertForm").submit();
+			}
+		}
+	
+	}else{
+	
+		
+		if( 'N' == 'Y') {
+			fnPreSurveyPopUp();
+
+		} else {
+			if (confirm("신청하시겠습니까?")) {
+				$("#insertForm").submit();
+			}
+		}
+	}
+}
+
+
+function fnRemoveTeammate(_obj,_stdNo,_type,_state) {
+	var divId = "";
+
+	if (_type == 'pop') {
+		divId = "popMemberList";
+		teamStdNoPopArry.splice(teamStdNoPopArry.indexOf(_stdNo), 1);
+		
+
+	}else{
+		divId = "detailTeammate";
+		teamStdNoDetailArry.splice(teamStdNoDetailArry.indexOf(_stdNo), 1);
+		
+	}
+
+	$(_obj).parent().remove();
+
+	var divChk =  $('#'+divId+' p').length;
+	if (divChk < 1) {
+		$('div #'+divId).removeClass('member_list');
+	}
+}
+
+
+function fnGetProgramDetail(moveType,_npiKeyId,_npsKeyId,_viewType) {
+	if (isEmpty('')) {
+		alert("연계비교과 이동은 로그인 이후 사용 가능 합니다.");
+		return false;
+	}
+
+
+	var _url = "";
+	if (moveType == 'MY_PROGRAM') {
+		 _url = "../../../myNcrProgram/a/m/getProgramDetail.do"
+	}else{
+		 _url = "../../../ncrProgramAppl/a/m/getProgramDetail.do"
+	}
+	$('#detailForm #npsKeyId').val(_npsKeyId);
+	$('#detailForm #npiKeyId').val(_npiKeyId);
+	$('#detailForm #viewType').val(_viewType);
+	$('#detailForm #moveType').val(moveType);
+
+	$('#detailForm').attr('action',_url).submit();
+}
+
+
+function fnApplyStdAvgAbilityGraph(){
+	$.ajax({
+		url : "../../../ncrProgramAppl/a/n/getApplyStdAvgAbilityGraph.do"
+		, type : "post"
+		, data : {
+			npiKeyId : "NCR000000002055"
+		}
+		, success : function(res) {
+			var dataArry = [];
+			var categoryNm = [];
+
+			
+				var abilityCd = "A001";
+				dataArry.push(res.applyStdAvgAbilityInfo[abilityCd]);
+				categoryNm.push("감수성");
+			
+				var abilityCd = "A002";
+				dataArry.push(res.applyStdAvgAbilityInfo[abilityCd]);
+				categoryNm.push("소통력");
+			
+				var abilityCd = "A003";
+				dataArry.push(res.applyStdAvgAbilityInfo[abilityCd]);
+				categoryNm.push("창의성");
+			
+				var abilityCd = "A004";
+				dataArry.push(res.applyStdAvgAbilityInfo[abilityCd]);
+				categoryNm.push("사고력");
+			
+				var abilityCd = "A005";
+				dataArry.push(res.applyStdAvgAbilityInfo[abilityCd]);
+				categoryNm.push("개방성");
+			
+			console.log(dataArry);
+			console.log(categoryNm);
+			drawApplyStdAvgAbilityGraph('applyStdAvgAbilityDiv',dataArry,categoryNm);
+		}
+	});
+}
+//찜하기
+$('#falBtn_0').on('click', function(){
+	var _rtnUrl = location.pathname+"?npiKeyId="+"NCR000000002055";
+
+	fnChkFavoriteData('NCR000000002055','NCR_PROGRAM', 'falBtn_0',_rtnUrl);
+
+	if($(this).hasClass("on")){
+		$('#favCnt').text(parseInt($('#favCnt').text())-1);
+	} else {
+		$('#favCnt').text(parseInt($('#favCnt').text())+1);
+	}
+});
+
+function fnGoList(){
+	location.href= '../../../ncrProgramAppl/a/m/goProgramApplList.do'
+}
+</script>
+		<!-- [pp] //서브페이지 컨텐츠 영역 -->
+	</div>
+	<!-- [pp] //푸터를 제외한 전체페이지 -->
+	<!-- [pp] 푸터 -->
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 자기주도활동 상태 -->
+
+
+
+
+
+
+
+<!-- 자기주도활동 종류 -->
+
+
+
+
+
+
+
+
+
+<!-- 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 학생 쪽 프로그램 상태 -->
+
+
+
+
+
+
+
+
+
+<!-- 학생신청상태 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 동료평가 진행단계 -->
+
+
+
+
+
+<!-- 진로설계 목표 계획 구분 값 -->
+
+
+
+
+
+<!-- 진단 타입값 -->
+
+
+
+
+
+
+
+
+
+
+<!-- 진로 및 취업 상담 -->
+
+<!-- 외국인 상담 -->
+
+<!-- 학생생활 상담소 -->
+
+<!-- 학습상담 -->
+
+<!-- 창업상담-->
+
+<!-- 경제/장학 상담 -->
+
+<!-- 현장실습 상담 -->
+
+<!-- 현장실습 상담 -->
+
+
+<!-- 방문상담 신청구분 -->
+
+
+
+
+<!-- 방문상담 신청상태 -->
+
+
+
+
+
+
+
+<!-- 온라인 상담 상태 -->
+
+
+
+
+
+
+<!-- 학생생활상담 상태 -->
+
+
+
+
+
+
+
+<!-- 성희롱.성폭력  상담 상태 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+	
+	
+	
+		
+	
+
+
+
+<!-- [pp] 푸터 -->
+<footer class="footer_wrap">
+	<div class="grid_content">
+		<ul class="footer_top">
+			<li><a href="https://www.ajou.ac.kr/kr/guide/policy.do;">개인정보처리방침</a></li>
+			<li><a href="javascript:void(0);">이메일무단수집거부</a></li>
+		</ul>
+		<ul class="footer_bottom">
+			<li>16499 경기도 수원시 영통구 월드컵로 206 아주대학교 <br/>T.031-219-2114</li>
+			<li><i>/</i>문의처  : 교육혁신팀<br/>&#40;031-219-3383~4, ajouhub@ajou.ac.kr&#41;</li>
+			<li>COPYRIGHT 2020 Ajou University. All rights Reserved</li>
+		</ul>
+	</div>
+	<a href="javascript:void(0);" class="move_top" title="페이지 상단으로 이동">TOP</a>
+</footer>
+<!-- [pp] //푸터 -->
+	<!-- [pp] //푸터 -->
+
+	<div id="layerPopup" class="white-popup mfp-hide"></div>
+
+	<script type="text/javascript">
+	
+	function fnGoMore(boardType) {
+		if(boardType == 'NOTICE'){
+		 location.href = "/notice/a/m/getBoardList.do";
+		}else if(boardType == 'PROF'){
+		 location.href = "/profCns/a/m/getProfCnsApply.do";
+		}else if(boardType == 'GENERAL'){
+			location.href = "/generalCampusCareers/a/m/getGrCampusCareersMngList.do";
+		}else if(boardType == 'NCR_PROGRAM'){
+			location.href = "/ncrProgramAppl/a/m/goProgramApplList.do";
+		}else if(boardType == 'SELF_ACTIVITY'){
+			location.href = "/activity/a/m/getActList.do";
+		}
+	}
+
+	//선택 메뉴 불들어오게 하기
+	$(function() {
+		var path = window.location.pathname;
+		var tempArry = [];
+		tempArry = path.split('/');
+
+		// 설정된 path값에 따른 메뉴 on
+		$(".subTitle").find("li > a").each(function(){
+			if( $(this).attr("data-contsParam") == tempArry[1] ){
+				$(this).parent('li').addClass("on");
+				$(this).addClass("on");
+
+				if ("false" == "true") {
+					$(this).parent("li").parent("ul").parent("li").addClass("on");
+				}
+				$(this).parents(".subTitle").show();
+			}
+		});
+	});
+	</script>
+</body>
+
+</html>
