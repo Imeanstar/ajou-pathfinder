@@ -1,0 +1,728 @@
+[
+  {
+    "name": "컴퓨터프로그래밍및실습",
+    "credit": 4,
+    "category": "전공필수",
+    "prereq": [],
+    "offered_terms": [
+      "1-1",
+      "1-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "이산수학",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [],
+    "offered_terms": [
+      "1-2",
+      "1-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "인공지능입문",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [],
+    "offered_terms": [
+      "1-2",
+      "2-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "객체지향프로그래밍및실습",
+    "credit": 4,
+    "category": "전공필수",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "2-1",
+      "2-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "자료구조",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "2-1",
+      "2-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "컴퓨터구조",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "2-1",
+      "2-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "알고리즘",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "2-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "컴퓨터네트워크",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [],
+    "offered_terms": [
+      "2-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "운영체제",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-1",
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "시스템프로그래밍",
+    "credit": 3,
+    "category": "전공필수",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "2-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "디지털회로",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "1-2",
+      "2-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "네트워크소프트웨어",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터네트워크"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "컴퓨터통신",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "3-1",
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "데이터베이스",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "3-1",
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "정보보호",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "3-1",
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "오픈소스SW입문",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-1",
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "기계학습",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "3-1",
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "컴파일러",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "3-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "데이터마이닝",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "3-2",
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "IT전문영어",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "영어"
+    ],
+    "offered_terms": [
+      "3-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "IT집중교육1",
+    "credit": 6,
+    "category": "전공선택",
+    "prereq": [
+      "객체지향프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "IT집중교육2",
+    "credit": 6,
+    "category": "전공선택",
+    "prereq": [
+      "객체지향프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "자기주도프로젝트",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "객체지향프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "계산이론",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "이산수학"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "지능형사물인터넷",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "운영체제"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "소프트웨어공학",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "객체지향프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "디지털포렌식",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "웹시스템설계",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "객체지향프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "임베디드소프트웨어",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "현대암호이론및응용",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "실전코딩1",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "3-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "실전코딩2",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "3-2",
+      "3-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "블록체인과IoT",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "AI집중교육1",
+    "credit": 6,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "AI집중교육2",
+    "credit": 6,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "3-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "모델링시뮬레이션",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "컴퓨터비젼",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "4-1",
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW창업론",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "모바일네트워크",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터네트워크"
+    ],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "컴퓨터그래픽스",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "자기주도연구1",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "분산시스템",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터프로그래밍및실습"
+    ],
+    "offered_terms": [
+      "4-1",
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "인공지능컴퓨터시스템",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "AI임베디드시스템",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "AIoT실시간서비스설계",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "AI통신네트워크",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "분산병렬컴퓨팅",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW캡스톤디자인",
+    "credit": 6,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2",
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW산업세미나",
+    "credit": 1,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "고급컴퓨터구조",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "컴퓨터구조"
+    ],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "인간과컴퓨터상호작용",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "알고리즘"
+    ],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "인공지능",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [
+      "자료구조"
+    ],
+    "offered_terms": [
+      "4-2",
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "자기주도연구2",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2",
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW현장실습1",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW현장실습2",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW현장실습3",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW현장실습4",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW현장실습5",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "SW현장실습6",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "창업실습1",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1",
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "창업실습2",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2",
+      "4-1"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "창업현장실습1",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-1",
+      "4-2"
+    ],
+    "competency_tags": []
+  },
+  {
+    "name": "창업현장실습2",
+    "credit": 3,
+    "category": "전공선택",
+    "prereq": [],
+    "offered_terms": [
+      "4-2",
+      "4-1"
+    ],
+    "competency_tags": []
+  }
+]
