@@ -41,6 +41,7 @@ class AuditResult:
     industry_project_count: int
     language_ok: bool | None
     unresolved: list[str] = field(default_factory=list)
+    programming_competency_certified: bool | None = None  # Task 4-5가 자기신고로 채움(심화과정만 해당)
 
 
 def _elective_credit_earned(elective_courses: list[dict], requirements: dict) -> int:
