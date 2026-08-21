@@ -152,3 +152,68 @@ def test_chat_answer_resolves_language_requirement():
     updated = resp.json()
     assert updated["language_ok"] is True
     assert "language_requirement" not in updated["unresolved"]
+
+
+def test_plan_returns_competency_target_for_radar_chart():
+    """레이더 차트가 '목표(점선) vs 현재(실선)'를 그리려면 목표치가 응답에 있어야 한다.
+    gap만으로 역산하면 이미 목표를 넘긴 축이 전부 100%로 보이는 버그가 났었다(2026-08-21)."""
+    resp = client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+    })
+    body = resp.json()
+    assert "competency_target" in body
+    assert body["competency_target"]["데이터베이스"] > 0
+
+
+def test_plan_accepts_language_score_dropdown_and_reflects_in_audit():
+    """화면1에서 어학 성적을 드롭다운으로 직접 고르면 챗봇을 거치지 않고 바로 반영돼야 한다."""
+    resp = client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+        "language_score": {"exam": "TOEIC", "score": 750},
+    })
+    audit = resp.json()["audit"]
+    assert audit["language_ok"] is True
+    assert "language_requirement" not in audit["unresolved"]
+
+
+def test_plan_accepts_grade_based_language_score():
+    resp = client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+        "language_score": {"exam": "TOEIC_Speaking", "score": "IH"},
+    })
+    assert resp.json()["audit"]["language_ok"] is True
+
+
+def test_plan_accepts_programming_competency_selfreport():
+    resp = client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+        "programming_competency": {"topcit_score": 200},
+    })
+    audit = resp.json()["audit"]
+    assert audit["programming_competency_certified"] is True
+    assert "programming_competency" not in audit["unresolved"]
+
+
+def test_plan_without_selfreports_keeps_items_unresolved():
+    """아무것도 안 고르면 '모른다' 상태가 그대로 유지돼야 한다(추측 금지)."""
+    resp = client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+    })
+    audit = resp.json()["audit"]
+    assert audit["language_ok"] is None
+    assert "language_requirement" in audit["unresolved"]
+
+
+def test_upload_returns_masked_preview_for_user_confirmation(monkeypatch):
+    """화면2에서 '이렇게 가렸습니다'를 사용자에게 보여주려면 마스킹된 본문이 필요하다.
+    mask_and_validate를 통과한 텍스트라 PII가 남아있을 수 없다(남아있으면 422로 거부됨)."""
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    pdf_bytes = build_test_transcript_pdf(include_pii=True)
+
+    resp = client.post("/api/upload", files={"file": ("t.pdf", pdf_bytes, "application/pdf")})
+
+    body = resp.json()
+    assert isinstance(body["masked_preview"], str)
+    assert len(body["masked_preview"]) > 0
+    assert "홍길동" not in body["masked_preview"]
+    assert "202512345" not in body["masked_preview"]

@@ -13,6 +13,7 @@ from langgraph.graph import END, StateGraph
 from app.agents.competency import (
     ManualProject,
     compute_gap,
+    compute_target,
     diagnose_competency,
     get_domain_overlay,
     get_grad_lab_cluster,
@@ -33,6 +34,7 @@ class PathfinderState(TypedDict, total=False):
     domain_overlay: str | None
     grad_lab_cluster: str | None
     competency_vector: dict[str, dict[str, float]]
+    competency_target: dict[str, float]
     gap: dict[str, float]
     course_recommendations: list[dict]
     program_recommendations: list[dict]
@@ -57,7 +59,10 @@ def _resolve_overlay(state: PathfinderState) -> dict[str, float] | None:
 def _gap_node(state: PathfinderState) -> dict:
     overlay = _resolve_overlay(state)
     gap = compute_gap(state["competency_vector"], state["track"], overlay=overlay)
-    return {"gap": gap}
+    # 목표치도 같이 내보낸다 — 화면의 레이더 차트가 "목표(점선) vs 현재(실선)"를 그리려면
+    # gap만으로는 부족하다(gap=0인 축의 목표를 역산할 수 없어 꽉 찬 육각형이 됐었다).
+    target = compute_target(state["track"], overlay=overlay)
+    return {"gap": gap, "competency_target": target}
 
 
 def _course_reco_node(state: PathfinderState) -> dict:

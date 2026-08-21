@@ -81,16 +81,15 @@ def diagnose_competency(
     return vector
 
 
-def compute_gap(
-    competency_vector: dict[str, dict[str, float]],
-    track: str,
-    overlay: dict[str, float] | None = None,
-) -> dict[str, float]:
-    """목표(트랙 가중치, 오버레이 있으면 병합) - 현재 역량(검증+자기신고). 음수는 0으로 클램프.
+def compute_target(track: str, overlay: dict[str, float] | None = None) -> dict[str, float]:
+    """트랙이 요구하는 역량 목표치(오버레이 있으면 병합). 레이더 차트의 점선(목표)이 이 값이다.
 
-    overlay: `get_domain_overlay()`/`get_grad_lab_cluster()`로 조회한 가중치 dict.
     같은 역량 축을 트랙과 오버레이가 둘 다 가리키면 더 큰 쪽을 목표로 삼는다(단순 합산은
     두 축이 겹칠 때 목표치가 부풀려져 격차가 과장될 수 있어 피한다).
+
+    compute_gap이 내부적으로 쓰던 계산을 별도 함수로 뺐다 — 화면이 gap만으로 목표를
+    역산하면 이미 목표를 넘긴 축(gap=0)이 전부 "목표=현재"로 보여 레이더가 꽉 찬
+    육각형이 되는 버그가 있었다(2026-08-21 실제 화면에서 발견).
     """
     ontology = _load_ontology()
     target = {k: v for k, v in ontology["tracks"][track].items() if k != "label"}
@@ -99,6 +98,16 @@ def compute_gap(
             if competency_id == "label":
                 continue
             target[competency_id] = max(target.get(competency_id, 0.0), weight)
+    return target
+
+
+def compute_gap(
+    competency_vector: dict[str, dict[str, float]],
+    track: str,
+    overlay: dict[str, float] | None = None,
+) -> dict[str, float]:
+    """목표(트랙 가중치, 오버레이 있으면 병합) - 현재 역량(검증+자기신고). 음수는 0으로 클램프."""
+    target = compute_target(track, overlay)
 
     gap = {}
     for competency_id, target_weight in target.items():

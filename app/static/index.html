@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AJOU Pathfinder</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="landing-body">
+  <header class="landing-header">
+    <div class="landing-brand">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 2 4 5.5v6c0 4.6 3.4 8.9 8 10.5 4.6-1.6 8-5.9 8-10.5v-6L12 2Z"
+              fill="#12213f" />
+      </svg>
+      <span>AJOU PATHFINDER</span>
+    </div>
+  </header>
+
+  <main class="landing-main">
+    <h1 class="landing-hero">
+      졸업까지 <em>무엇을 듣고</em><br />
+      <em>무엇에 참여할지</em><br />
+      추천해 드립니다.
+    </h1>
+
+    <p class="landing-sub">
+      성적표와 활동, 진로 목표를 함께 분석해<br />
+      남은 학기에 필요한 과목과 교내 프로그램을 학기별로 정리합니다.
+    </p>
+
+    <button class="landing-cta" id="startBtn">시작하기 &nbsp;→</button>
+
+    <div class="landing-or">또는</div>
+
+    <p class="landing-resume">
+      이미 정보를 입력하셨나요?
+      <a href="/dashboard.html">내 로드맵 이어보기 →</a>
+    </p>
+  </main>
+
+  <script>
+    document.getElementById("startBtn").addEventListener("click", () => {
+      window.location.href = "/upload.html";
+    });
+  </script>
+</body>
+</html>

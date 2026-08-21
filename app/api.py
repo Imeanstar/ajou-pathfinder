@@ -12,7 +12,7 @@ PII 로깅 안전장치 (Task 3-1에서 이관됨): 이 파일 어디에서도 �
 예외 메시지는 고정 문자열이라 원문이 섞일 수 없다(app/masking.py, app/parser.py 참고).
 """
 import os
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -31,7 +31,11 @@ from app.agents.competency import (
     list_project_fields,
     list_tracks,
 )
-from app.agents.session_chat import build_question_list, apply_self_reported_answers
+from app.agents.session_chat import (
+    apply_self_reported_answers,
+    build_question_list,
+    evaluate_language_score,
+)
 from app.agents.supervisor import run_full_plan
 from app.audit import AuditResult, attach_citation, audit_graduation, load_requirements
 from app.guardrail import get_blocked_count, is_guardrail_enabled, set_guardrail_override
@@ -93,7 +97,13 @@ async def upload(file: UploadFile = File(...)):
             detail="입력에서 이상한 지시문이 감지되어 처리를 거부했습니다.",
         )
 
-    response = {"courses": transcript.courses, "pii_masked": True}
+    # 마스킹 본문은 앞부분만 잘라 보낸다 — 화면에서 "이렇게 가렸습니다"를 확인시키는 용도라
+    # 전문이 필요하지 않고, 응답 크기도 불필요하게 키우지 않는다.
+    response = {
+        "courses": transcript.courses,
+        "pii_masked": True,
+        "masked_preview": transcript.masked_text[:1200],
+    }
     if not os.environ.get("GOOGLE_API_KEY"):
         response["warning"] = (
             "GOOGLE_API_KEY가 설정되지 않아 과목 인식을 건너뛰었습니다(개발 모드). "
@@ -108,6 +118,21 @@ class ManualProjectIn(BaseModel):
     is_team: bool = False
 
 
+class LanguageScoreIn(BaseModel):
+    """화면1 어학 드롭다운 — exam은 graduation_requirements.json의 키와 같은 이름
+    (TOEIC/TEPS/TOEFL_PBT/TOEFL_CBT/TOEFL_iBT/GTELP_Lv2/GTELP_Lv3/TOEIC_Speaking/OPIc).
+    score는 점수제면 숫자, 등급제(TOEIC Speaking·OPIc)면 등급 문자열."""
+
+    exam: str
+    score: object
+
+
+class ProgrammingCompetencyIn(BaseModel):
+    topcit_score: Optional[int] = None
+    apc_pass: bool = False
+    contest_award: bool = False
+
+
 class PlanRequest(BaseModel):
     courses: list[dict]
     admission_year: int = 2025
@@ -117,6 +142,47 @@ class PlanRequest(BaseModel):
     grad_lab_cluster: Optional[str] = None
     projects: list[ManualProjectIn] = []
     remaining_terms: list[str] = DEFAULT_REMAINING_TERMS
+    # 성적표에 없는 자기신고 항목 — 원래는 챗봇으로만 채웠으나, 화면1에서 드롭다운으로
+    # 직접 고를 수 있게 되면서 여기서도 받는다(2026-08-21). 안 보내면 unresolved 유지.
+    language_score: Optional[LanguageScoreIn] = None
+    programming_competency: Optional[ProgrammingCompetencyIn] = None
+
+
+def _apply_dropdown_selfreports(audit: AuditResult, req: "PlanRequest", requirements: dict) -> AuditResult:
+    """화면1 드롭다운으로 직접 고른 어학·프로그래밍역량 값을 판정에 반영한다.
+
+    챗봇(apply_self_reported_answers)은 자연어를 정규식으로 파싱하지만, 여기 오는 값은
+    이미 구조화돼 있어 파싱 단계가 없다. 두 경로 모두 최종 판정은 같은 함수를 쓴다
+    (evaluate_language_score / _evaluate_programming_competency).
+    안 고른 항목은 건드리지 않는다 — unresolved가 그대로 남아 챗봇이 마저 물어본다.
+    """
+    language_ok = audit.language_ok
+    programming_certified = audit.programming_competency_certified
+    unresolved = list(audit.unresolved)
+
+    if req.language_score is not None:
+        evaluated = evaluate_language_score(
+            req.language_score.exam, req.language_score.score, requirements
+        )
+        if evaluated is not None:
+            language_ok = evaluated
+            unresolved = [r for r in unresolved if r != "language_requirement"]
+
+    if req.programming_competency is not None:
+        pc = req.programming_competency
+        cert = requirements["programming_competency_certification"]
+        certified = (
+            pc.topcit_score is not None and pc.topcit_score >= cert["topcit_min_score"]
+        ) or pc.apc_pass or pc.contest_award
+        programming_certified = certified
+        unresolved = [r for r in unresolved if r != "programming_competency"]
+
+    return replace(
+        audit,
+        language_ok=language_ok,
+        programming_competency_certified=programming_certified,
+        unresolved=unresolved,
+    )
 
 
 @app.post("/api/plan")
@@ -124,6 +190,7 @@ def plan(req: PlanRequest):
     transcript = TranscriptData(courses=req.courses)
     requirements = load_requirements(req.admission_year)
     audit = audit_graduation(transcript, req.admission_year, req.track_type, requirements)
+    audit = _apply_dropdown_selfreports(audit, req, requirements)
 
     taken_course_names = {c["name"] for c in req.courses}
     projects = [ManualProject(title=p.title, field=p.field, is_team=p.is_team) for p in req.projects]
@@ -164,6 +231,7 @@ def plan(req: PlanRequest):
         "citations": citations,
         "questions": build_question_list(audit.unresolved),
         "competency_vector": result["competency_vector"],
+        "competency_target": result["competency_target"],
         "gap": result["gap"],
         "course_recommendations": result["course_recommendations"],
         "program_recommendations": result["program_recommendations"],
@@ -187,7 +255,8 @@ def chat_answer(req: ChatAnswerRequest):
 
 @app.get("/")
 def index():
-    return RedirectResponse(url="/upload.html")
+    # 2026-08-21부터 진입점은 랜딩 페이지 — 여기서 [시작하기]를 눌러야 업로드로 넘어간다.
+    return RedirectResponse(url="/index.html")
 
 
 # 정적 파일(화면 HTML/CSS/JS) 서빙 — 반드시 API 라우트 전부 선언한 뒤 마지막에 마운트한다.

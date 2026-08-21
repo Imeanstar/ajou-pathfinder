@@ -1,5 +1,7 @@
-// 화면1 — 업로드 + 진로 설정 + 개인 프로젝트. docs/plans Task 5-1.
-// 다음 화면(대시보드, Task 5-2~5-4)이 쓸 상태는 sessionStorage에 저장해 넘긴다.
+// 화면1 — 3단계 위저드(업로드 → 마스킹 결과 확인 → 진로/자기신고 설정).
+// 2026-08-21 전면 개편: 원래는 업로드와 설정이 한 화면에 다 있었는데, Upload.mov 레퍼런스대로
+// "한 번에 하나씩" 흐름으로 바꾸고 마스킹 결과를 사용자가 눈으로 확인하는 단계를 넣었다.
+// 다음 화면(대시보드)이 쓸 상태는 sessionStorage에 저장해 넘긴다.
 
 const PROJECT_FORM_TYPES = [
   { id: "team", label: "팀" },
@@ -8,7 +10,196 @@ const PROJECT_FORM_TYPES = [
 
 let CONFIG = null;
 let uploadedCourses = [];
-let uploadWarning = null;
+
+// --- 단계 전환: 나가는 섹션을 위로 페이드아웃 → 들어오는 섹션을 아래에서 페이드인 ---
+function goToStep(fromId, toId, stepNumber) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+
+  from.classList.add("is-leave");
+  setTimeout(() => {
+    from.hidden = true;
+    from.classList.remove("is-leave");
+
+    to.hidden = false;
+    to.classList.add("is-enter");
+    // 다음 프레임에 클래스를 떼야 transition이 실제로 재생된다
+    // (hidden 해제와 같은 프레임에 떼면 브라우저가 시작값을 못 잡는다).
+    requestAnimationFrame(() => requestAnimationFrame(() => to.classList.remove("is-enter")));
+
+    document.getElementById("stepIndicator").textContent = stepNumber;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 380);
+}
+
+// ============================================================
+// STEP 1 — 업로드 + 진행률
+// ============================================================
+
+function setProgress(pct, title, sub) {
+  document.getElementById("upBarFill").style.width = `${pct}%`;
+  if (title) document.getElementById("upTitle").textContent = title;
+  if (sub !== undefined) document.getElementById("upSub").textContent = sub;
+}
+
+function showUploadError(message) {
+  const box = document.getElementById("upError");
+  box.textContent = message;
+  box.hidden = false;
+  document.getElementById("upBarFill").style.background = "var(--red)";
+  document.getElementById("upTitle").textContent = "업로드 실패";
+  document.getElementById("upSub").textContent = "다른 파일로 다시 시도해주세요.";
+  document.getElementById("dropzone").classList.remove("is-disabled");
+}
+
+function resetProgressUi() {
+  document.getElementById("uploadProgress").hidden = false;
+  document.getElementById("upError").hidden = true;
+  document.getElementById("upCheck").hidden = true;
+  document.getElementById("upBarFill").style.background = "var(--blue-600)";
+  setProgress(0, "업로드 중...", "0%");
+}
+
+/**
+ * 업로드 구간은 XHR의 실제 진행률(0~40%)을 쓰고, 그 뒤 서버가 마스킹·과목 인식(Gemini 호출)을
+ * 하는 동안은 실제 진행률을 알 수 없으므로 40~90%를 시간 기반으로 채운다.
+ * 단계 문구는 서버가 실제로 수행하는 순서(마스킹 → 인젝션 검사 → 과목 구조화) 그대로다.
+ */
+function uploadFile(file) {
+  if (!file) return;
+  if (file.type !== "application/pdf") {
+    resetProgressUi();
+    showUploadError("PDF 파일만 업로드할 수 있습니다.");
+    return;
+  }
+
+  resetProgressUi();
+  document.getElementById("dropzone").classList.add("is-disabled");
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const xhr = new XMLHttpRequest();
+  let serverTimer = null;
+
+  xhr.upload.addEventListener("progress", (e) => {
+    if (!e.lengthComputable) return;
+    const pct = Math.round((e.loaded / e.total) * 40);
+    setProgress(pct, "성적표 업로드 중", `${pct}%`);
+  });
+
+  // 업로드가 끝나면 서버 처리 구간으로 넘어간다
+  xhr.upload.addEventListener("load", () => {
+    let pct = 40;
+    setProgress(pct, "이름·학번 마스킹 중", "개인정보를 지우고 있습니다");
+    serverTimer = setInterval(() => {
+      pct = Math.min(90, pct + 2);
+      if (pct > 65) {
+        setProgress(pct, "과목 인식 중", "마스킹된 본문에서 이수 과목을 읽고 있습니다");
+      } else {
+        setProgress(pct, "이름·학번 마스킹 중", "개인정보를 지우고 있습니다");
+      }
+    }, 220);
+  });
+
+  xhr.addEventListener("load", () => {
+    if (serverTimer) clearInterval(serverTimer);
+
+    let body = {};
+    try {
+      body = JSON.parse(xhr.responseText);
+    } catch (_) {
+      showUploadError("서버 응답을 해석하지 못했습니다.");
+      return;
+    }
+
+    if (xhr.status !== 200) {
+      showUploadError(body.detail || "업로드에 실패했습니다.");
+      return;
+    }
+
+    setProgress(100, "완료", "마스킹 결과를 확인해주세요");
+    document.getElementById("upCheck").hidden = false;
+
+    uploadedCourses = body.courses || [];
+    renderMaskResult(body);
+    setTimeout(() => goToStep("stepUpload", "stepMasked", 2), 700);
+  });
+
+  xhr.addEventListener("error", () => {
+    if (serverTimer) clearInterval(serverTimer);
+    showUploadError("네트워크 오류로 업로드하지 못했습니다.");
+  });
+
+  xhr.open("POST", "/api/upload");
+  xhr.send(formData);
+}
+
+function setupDropzone() {
+  const dz = document.getElementById("dropzone");
+  const input = document.getElementById("fileInput");
+
+  dz.addEventListener("click", () => input.click());
+  input.addEventListener("change", () => uploadFile(input.files[0]));
+
+  ["dragover", "dragenter"].forEach((evt) =>
+    dz.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dz.classList.add("is-dragover");
+    })
+  );
+  ["dragleave", "drop"].forEach((evt) =>
+    dz.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dz.classList.remove("is-dragover");
+    })
+  );
+  dz.addEventListener("drop", (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) uploadFile(file);
+  });
+}
+
+// ============================================================
+// STEP 2 — 마스킹 결과
+// ============================================================
+
+function renderMaskResult(body) {
+  document.getElementById("maskPreview").textContent =
+    body.masked_preview || "(표시할 본문이 없습니다)";
+
+  const countEl = document.getElementById("maskCourseCount");
+  const courseSection = document.getElementById("courseSection");
+
+  if (body.warning) {
+    // API 키가 없어 과목 구조화를 건너뛴 개발 모드 — 없는 결과를 있는 척하지 않는다.
+    countEl.textContent = body.warning;
+    courseSection.hidden = true;
+    return;
+  }
+
+  courseSection.hidden = false;
+  countEl.textContent = `과목 ${uploadedCourses.length}건 인식`;
+  document.getElementById("courseTableBody").innerHTML = uploadedCourses
+    .map(
+      (c) => `<tr>
+        <td>${escapeHtml(c.name ?? "")}</td>
+        <td>${c.credit ?? ""}</td>
+        <td>${escapeHtml(c.category ?? "")}</td>
+      </tr>`
+    )
+    .join("");
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = String(text);
+  return div.innerHTML;
+}
+
+// ============================================================
+// STEP 3 — 진로 목표 + 자기신고
+// ============================================================
 
 async function loadConfig() {
   const res = await fetch("/api/config");
@@ -20,8 +211,7 @@ async function loadConfig() {
     .join("");
   trackSelect.addEventListener("change", updateOverlayField);
 
-  const trackTypeGroup = document.getElementById("trackTypeGroup");
-  trackTypeGroup.innerHTML = CONFIG.track_types
+  document.getElementById("trackTypeGroup").innerHTML = CONFIG.track_types
     .map(
       (tt, i) => `
       <label>
@@ -32,27 +222,123 @@ async function loadConfig() {
     .join("");
 
   updateOverlayField();
-  addProjectRow(); // 최초 1행 기본 노출
+  addProjectRow();
 }
 
 function updateOverlayField() {
   const track = document.getElementById("track").value;
   const overlaySelect = document.getElementById("overlay");
-  const overlayLabel = document.getElementById("overlayLabel");
   const isGrad = track === "대학원_연구";
 
   const options = isGrad ? CONFIG.grad_lab_clusters : CONFIG.domain_overlays;
-  overlayLabel.textContent = isGrad ? "관심 연구실 (선택)" : "관심 산업 (선택)";
+  document.getElementById("overlayLabel").textContent = isGrad
+    ? "관심 연구실 (선택)"
+    : "관심 산업 (선택)";
   overlaySelect.innerHTML =
     `<option value="">선택 안 함</option>` +
     options.map((name) => `<option value="${name}">${formatOverlayLabel(name)}</option>`).join("");
 }
 
 function formatOverlayLabel(name) {
-  // 연구실 클러스터 이름은 "AI_데이터_연구실" 같은 id라 표시는 살짝 다듬는다.
   return name.replace(/_/g, " ").replace(/연구실$/, " 연구실").trim();
 }
 
+// --- 어학 연쇄 드롭다운 ---
+// 시험 종류 -> (하위 유형) -> 점수/등급. exam id는 graduation_requirements.json의 키와 맞춘다.
+const TOEFL_SUBTYPES = [
+  { value: "TOEFL_PBT", label: "PBT" },
+  { value: "TOEFL_CBT", label: "CBT" },
+  { value: "TOEFL_iBT", label: "IBT" },
+];
+const GTELP_SUBTYPES = [
+  { value: "GTELP_Lv2", label: "Level 2" },
+  { value: "GTELP_Lv3", label: "Level 3" },
+];
+// TOEIC Speaking·OPIc 등급(높은 것부터 나열해 고르기 쉽게)
+const SPEAKING_GRADES = ["AH", "AM", "AL", "IH", "IM", "IL", "NH", "NM", "NL"];
+
+function setSlot(slotId, visible) {
+  document.getElementById(slotId).hidden = !visible;
+}
+
+function updateLanguageFields() {
+  const exam = document.getElementById("langExam").value;
+  const subSelect = document.getElementById("langSub");
+  const gradeSelect = document.getElementById("langGrade");
+  const note = document.getElementById("langNote");
+
+  setSlot("langSubSlot", false);
+  setSlot("langScoreSlot", false);
+  setSlot("langGradeSlot", false);
+  note.textContent = "";
+
+  if (!exam) return;
+
+  if (exam === "TOEFL" || exam === "GTELP") {
+    const subtypes = exam === "TOEFL" ? TOEFL_SUBTYPES : GTELP_SUBTYPES;
+    subSelect.innerHTML =
+      `<option value="">${exam === "TOEFL" ? "유형" : "등급"} 선택</option>` +
+      subtypes.map((s) => `<option value="${s.value}">${s.label}</option>`).join("");
+    setSlot("langSubSlot", true);
+    // 하위 유형을 고른 뒤에야 점수 칸이 열린다
+    setSlot("langScoreSlot", Boolean(subSelect.value));
+    return;
+  }
+
+  if (exam === "TOEIC_Speaking" || exam === "OPIc") {
+    gradeSelect.innerHTML =
+      `<option value="">등급 선택</option>` +
+      SPEAKING_GRADES.map((g) => `<option value="${g}">${g}</option>`).join("");
+    setSlot("langGradeSlot", true);
+    note.textContent =
+      exam === "TOEIC_Speaking"
+        ? "졸업 기준: IM1 이상"
+        : "졸업 기준: IL 이상";
+    return;
+  }
+
+  // TOEIC / TEPS — 바로 점수 입력
+  setSlot("langScoreSlot", true);
+  note.textContent = exam === "TOEIC" ? "졸업 기준: 730점 이상" : "졸업 기준: 605점 이상";
+}
+
+function collectLanguageScore() {
+  const exam = document.getElementById("langExam").value;
+  if (!exam) return null;
+
+  if (exam === "TOEIC_Speaking" || exam === "OPIc") {
+    const grade = document.getElementById("langGrade").value;
+    return grade ? { exam, score: grade } : null;
+  }
+
+  const scoreRaw = document.getElementById("langScore").value;
+  if (scoreRaw === "") return null;
+  const score = Number(scoreRaw);
+
+  if (exam === "TOEFL" || exam === "GTELP") {
+    const sub = document.getElementById("langSub").value;
+    return sub ? { exam: sub, score } : null;
+  }
+  return { exam, score };
+}
+
+function updateProgCertFields() {
+  setSlot("topcitSlot", document.getElementById("progCert").value === "topcit");
+}
+
+function collectProgrammingCompetency() {
+  const kind = document.getElementById("progCert").value;
+  if (!kind) return null;
+  if (kind === "topcit") {
+    const raw = document.getElementById("topcitScore").value;
+    return raw === "" ? null : { topcit_score: Number(raw) };
+  }
+  if (kind === "apc") return { apc_pass: true };
+  if (kind === "contest") return { contest_award: true };
+  return null;
+}
+
+// --- 개인 프로젝트 ---
 function projectFieldOptionsHtml() {
   return CONFIG.project_fields.map((f) => `<option value="${f.id}">${f.label}</option>`).join("");
 }
@@ -83,68 +369,7 @@ function collectProjects() {
     .filter((p) => p.title.length > 0);
 }
 
-function setDzStatus(message, kind) {
-  const el = document.getElementById("dzStatus");
-  el.textContent = message;
-  el.className = `dz-status ${kind}`;
-}
-
-async function handleFile(file) {
-  if (!file || file.type !== "application/pdf") {
-    setDzStatus("PDF 파일만 업로드할 수 있습니다.", "err");
-    return;
-  }
-  setDzStatus("업로드 중...", "");
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const res = await fetch("/api/upload", { method: "POST", body: formData });
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      setDzStatus(body.detail || "업로드에 실패했습니다.", "err");
-      return;
-    }
-    const body = await res.json();
-    uploadedCourses = body.courses || [];
-    uploadWarning = body.warning || null;
-
-    if (uploadWarning) {
-      setDzStatus(`✅ 이름·학번 마스킹 완료 — ${uploadWarning}`, "warn");
-    } else {
-      setDzStatus(`✅ 이름·학번 마스킹 완료 · 과목 ${uploadedCourses.length}건 인식`, "ok");
-    }
-  } catch (err) {
-    setDzStatus("네트워크 오류로 업로드하지 못했습니다.", "err");
-  }
-}
-
-function setupDropzone() {
-  const dz = document.getElementById("dropzone");
-  const input = document.getElementById("fileInput");
-
-  dz.addEventListener("click", () => input.click());
-  input.addEventListener("change", () => handleFile(input.files[0]));
-
-  ["dragover", "dragenter"].forEach((evt) =>
-    dz.addEventListener(evt, (e) => {
-      e.preventDefault();
-      dz.classList.add("dragover");
-    })
-  );
-  ["dragleave", "drop"].forEach((evt) =>
-    dz.addEventListener(evt, (e) => {
-      e.preventDefault();
-      dz.classList.remove("dragover");
-    })
-  );
-  dz.addEventListener("drop", (e) => {
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  });
-}
-
+// --- 제출 ---
 async function handleSubmit(e) {
   e.preventDefault();
   const submitBtn = document.getElementById("submitBtn");
@@ -152,18 +377,19 @@ async function handleSubmit(e) {
   submitBtn.textContent = "분석 중...";
 
   const track = document.getElementById("track").value;
-  const trackType = document.querySelector('input[name="trackType"]:checked').value;
   const overlayValue = document.getElementById("overlay").value || null;
   const isGrad = track === "대학원_연구";
 
   const payload = {
     courses: uploadedCourses,
     admission_year: CONFIG.admission_year,
-    track_type: trackType,
+    track_type: document.querySelector('input[name="trackType"]:checked').value,
     track: track,
     domain_overlay: isGrad ? null : overlayValue,
     grad_lab_cluster: isGrad ? overlayValue : null,
     projects: collectProjects(),
+    language_score: collectLanguageScore(),
+    programming_competency: collectProgrammingCompetency(),
   };
 
   try {
@@ -172,6 +398,7 @@ async function handleSubmit(e) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const result = await res.json();
 
     sessionStorage.setItem("pathfinder:formState", JSON.stringify(payload));
@@ -184,9 +411,27 @@ async function handleSubmit(e) {
   }
 }
 
+// ============================================================
 document.addEventListener("DOMContentLoaded", () => {
   loadConfig();
   setupDropzone();
+
+  document.getElementById("reuploadBtn").addEventListener("click", () => {
+    document.getElementById("uploadProgress").hidden = true;
+    document.getElementById("dropzone").classList.remove("is-disabled");
+    document.getElementById("fileInput").value = "";
+    goToStep("stepMasked", "stepUpload", 1);
+  });
+  document.getElementById("confirmMaskBtn").addEventListener("click", () => {
+    goToStep("stepMasked", "stepSettings", 3);
+  });
+
+  document.getElementById("langExam").addEventListener("change", updateLanguageFields);
+  document.getElementById("langSub").addEventListener("change", () => {
+    setSlot("langScoreSlot", Boolean(document.getElementById("langSub").value));
+  });
+  document.getElementById("progCert").addEventListener("change", updateProgCertFields);
+
   document.getElementById("addProjectRow").addEventListener("click", addProjectRow);
   document.getElementById("planForm").addEventListener("submit", handleSubmit);
 });

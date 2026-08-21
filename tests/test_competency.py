@@ -3,6 +3,7 @@ import pytest
 from app.agents.competency import (
     ManualProject,
     compute_gap,
+    compute_target,
     diagnose_competency,
     get_domain_overlay,
     get_grad_lab_cluster,
@@ -133,3 +134,23 @@ def test_list_project_fields_returns_nine_plus_기타_with_id_and_label():
     assert "기타" in ids
     web_backend = next(f for f in fields if f["id"] == "웹_백엔드")
     assert web_backend["label"] == "웹 백엔드"
+
+
+def test_compute_target_returns_track_weights_for_radar():
+    """레이더 차트가 '목표 대비 현재'를 그리려면 목표치 자체가 필요하다.
+    지금까지는 gap(=목표-현재, 0클램프)만 내려줘서 프론트가 '현재+gap'으로 역산했는데,
+    이미 목표를 넘긴 축은 gap이 0이라 목표가 현재와 같아 보이는 문제가 있었다
+    (2026-08-21 실제 화면에서 육각형이 꽉 찬 채로 나오는 버그로 발견)."""
+    target = compute_target("백엔드")
+
+    assert target["데이터베이스"] > 0
+    assert "label" not in target  # label은 표시용 메타데이터라 역량 축이 아니다
+
+
+def test_compute_target_merges_overlay_with_max():
+    """오버레이가 같은 축을 가리키면 compute_gap과 동일하게 큰 쪽을 목표로 삼아야 한다."""
+    base = compute_target("대학원_연구")
+    merged = compute_target("대학원_연구", overlay=get_grad_lab_cluster("AI_데이터_연구실"))
+
+    assert merged["데이터_ML"] >= base["데이터_ML"]
+    assert merged["데이터_ML"] > 0.5  # 클러스터(0.9)가 대학원 트랙 기본(0.5)보다 크다

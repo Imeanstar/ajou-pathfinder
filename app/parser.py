@@ -33,6 +33,10 @@ class InjectionDetected(Exception):
 @dataclass
 class TranscriptData:
     courses: list[dict]  # [{"name": str, "credit": float, "category": str}]
+    # 마스킹을 통과한 본문. 화면에서 "이렇게 가렸습니다"를 사용자에게 확인시키는 용도라
+    # 응답에 실어 보낸다(2026-08-21). mask_and_validate를 통과한 텍스트라 PII가 남아있을 수
+    # 없다 — 남아있으면 그 전에 PiiLeakDetected로 거부된다.
+    masked_text: str = ""
 
 
 def extract_words_from_pdf(pdf_bytes: bytes) -> list[dict]:
@@ -55,7 +59,7 @@ def parse_transcript_from_words(words: list[dict], structure_fn: StructureFn) ->
         increment_blocked_count()
         raise InjectionDetected("입력에서 프롬프트 인젝션 패턴이 감지되었습니다.")
     courses = structure_fn(masked_text)
-    return TranscriptData(courses=courses)
+    return TranscriptData(courses=courses, masked_text=masked_text)
 
 
 def parse_transcript(pdf_bytes: bytes, structure_fn: StructureFn) -> TranscriptData:

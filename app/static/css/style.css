@@ -79,20 +79,7 @@ h1.hero-title .accent { color: var(--blue-600); }
   box-shadow: var(--shadow); padding: 24px;
 }
 
-/* --- 업로드 드롭존 --- */
-.dropzone {
-  border: 2px dashed var(--border); border-radius: var(--radius);
-  background: var(--card); text-align: center; padding: 40px 24px; margin-bottom: 28px;
-  cursor: pointer; transition: border-color .15s, background .15s;
-}
-.dropzone.dragover { border-color: var(--blue-600); background: var(--blue-50); }
-.dropzone .dz-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
-.dropzone .dz-hint { font-size: 13px; color: var(--text-muted); }
-.dropzone input[type="file"] { display: none; }
-.dz-status { margin-top: 14px; font-size: 13px; }
-.dz-status.ok { color: var(--green); font-weight: 600; }
-.dz-status.warn { color: var(--amber-text); }
-.dz-status.err { color: var(--red); font-weight: 600; }
+/* 업로드 드롭존 스타일은 아래 '업로드 위저드' 섹션으로 이관됨(2026-08-21 전면 개편) */
 
 /* --- 폼 --- */
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
@@ -275,3 +262,184 @@ select:focus, input:focus { outline: 2px solid var(--blue-500); outline-offset: 
 }
 .toggle-switch.on::after { left: 16px; }
 .disclaimer { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+/* ============================================================
+   랜딩(index.html) — 2026-08-21 신설.
+   앱 내부(대시보드)의 네이비 헤더 대신, 흰 배경 위 큰 타이포 한 덩어리로 첫인상을 만든다.
+   ============================================================ */
+.landing-body { background: #fff; }
+
+.landing-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 40px; background: #fff;
+}
+.landing-brand { display: flex; align-items: center; gap: 10px; }
+.landing-brand svg { width: 20px; height: 20px; }
+.landing-brand span {
+  font-weight: 800; font-size: 13px; letter-spacing: 0.14em; color: var(--navy-900);
+}
+
+.landing-main {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 8vh 24px 12vh; gap: 28px;
+}
+.landing-hero {
+  margin: 0; font-size: clamp(30px, 5vw, 64px); line-height: 1.25;
+  font-weight: 800; letter-spacing: -0.02em; color: var(--navy-900);
+  /* 한글은 어절 중간에서 끊으면 안 된다 — keep-all 없이는 "추/천해"처럼 갈라진다 */
+  word-break: keep-all;
+  max-width: 20em;
+}
+.landing-hero em { font-style: normal; color: var(--blue-600); }
+.landing-sub {
+  margin: 0; color: var(--text-muted); font-size: clamp(14px, 1.5vw, 17px); line-height: 1.75;
+}
+
+.landing-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-width: min(420px, 80vw); padding: 18px 32px;
+  background: var(--navy-900); color: #fff; border: none; border-radius: 8px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.landing-cta:hover { background: var(--navy-800); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(18,33,63,.22); }
+
+.landing-or {
+  display: flex; align-items: center; gap: 16px;
+  width: min(420px, 80vw); color: var(--text-muted); font-size: 13px;
+}
+.landing-or::before, .landing-or::after {
+  content: ""; flex: 1; height: 1px; background: var(--border);
+}
+.landing-resume { font-size: 14px; color: var(--text-muted); }
+.landing-resume a { font-weight: 700; }
+
+/* ============================================================
+   업로드 위저드(upload.html) — 2026-08-21 전면 개편.
+   3단계(업로드 → 마스킹 결과 확인 → 진로/자기신고 설정)를 한 페이지에서
+   부드럽게 갈아끼운다. Upload.mov 레퍼런스의 카드+점선 드롭존+진행률 행 구조를 따름.
+   ============================================================ */
+.wizard { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.wizard-step { transition: opacity .38s ease, transform .38s ease; }
+.wizard-step[hidden] { display: none; }
+.wizard-step.is-enter { opacity: 0; transform: translateY(14px); }
+.wizard-step.is-leave { opacity: 0; transform: translateY(-10px); }
+
+.wizard-heading { text-align: center; margin-bottom: 28px; }
+.wizard-heading h1 { margin: 0 0 8px; font-size: 26px; letter-spacing: -0.01em; color: var(--navy-900); }
+.wizard-heading p { margin: 0; color: var(--text-muted); font-size: 14px; }
+
+/* --- 업로드 카드 + 점선 드롭존 --- */
+.upload-card {
+  background: var(--card); border-radius: 20px; padding: 20px;
+  box-shadow: 0 10px 40px rgba(20, 30, 60, 0.08);
+}
+.dropzone {
+  border: 2px dashed #ccd5e4; border-radius: 14px;
+  padding: 56px 24px; text-align: center; cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+}
+.dropzone:hover { border-color: var(--blue-500); background: #fbfcff; }
+.dropzone.is-dragover { border-color: var(--blue-600); background: var(--blue-50); }
+.dropzone.is-disabled { pointer-events: none; opacity: .55; }
+.dropzone-icon { width: 66px; height: 66px; margin: 0 auto 16px; display: block; }
+.dropzone-title { font-weight: 700; color: var(--navy-900); font-size: 15px; }
+.dropzone-title b { color: var(--blue-600); }
+.dropzone-hint { margin-top: 6px; font-size: 12.5px; color: var(--text-muted); }
+
+/* --- 진행률 행(카드 안에서 아래로 펼쳐짐) --- */
+.upload-progress {
+  margin-top: 14px; border: 1px solid var(--border); border-radius: 12px;
+  background: #fbfcfe; overflow: hidden;
+}
+.upload-progress[hidden] { display: none; }
+.up-row { display: flex; align-items: center; gap: 16px; padding: 16px 18px; }
+.up-texts { flex: 1; min-width: 0; }
+.up-title { font-weight: 700; font-size: 14px; color: var(--navy-900); }
+.up-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+.up-check {
+  width: 30px; height: 30px; border-radius: 50%; background: #e8f8ee;
+  display: flex; align-items: center; justify-content: center; color: var(--green);
+  font-size: 16px; font-weight: 700;
+}
+.up-bar { height: 3px; background: #eef1f7; }
+.up-bar-fill {
+  height: 100%; width: 0%; background: var(--blue-600);
+  transition: width .35s cubic-bezier(.4,0,.2,1);
+}
+.up-error { color: var(--red); font-size: 13px; padding: 0 18px 16px; }
+
+/* --- 마스킹 결과 --- */
+.mask-result-head {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+}
+.mask-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #e8f8ee; color: var(--green); border-radius: 999px;
+  padding: 7px 14px; font-size: 13px; font-weight: 700;
+}
+.mask-preview {
+  border: 1px solid var(--border); border-radius: 10px; background: #fbfcfe;
+  padding: 14px 16px; max-height: 220px; overflow: auto;
+  font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px;
+  line-height: 1.75; color: #46506a; white-space: pre-wrap; word-break: break-all;
+}
+.mask-section-label {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .06em; margin: 20px 0 8px;
+}
+.course-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.course-table th, .course-table td {
+  text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
+}
+.course-table th { color: var(--text-muted); font-weight: 600; font-size: 12px; }
+.course-table tbody tr:last-child td { border-bottom: none; }
+.course-scroll { max-height: 260px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+.wizard-actions { display: flex; gap: 12px; margin-top: 24px; }
+.wizard-actions .btn-secondary {
+  background: #fff; color: var(--navy-900); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 22px; font-weight: 700; font-size: 14px; cursor: pointer;
+}
+.wizard-actions .btn-secondary:hover { background: var(--bg); }
+.wizard-actions .btn-primary {
+  flex: 1; background: var(--blue-600); color: #fff; border: none;
+  border-radius: 8px; padding: 14px 22px; font-weight: 700; font-size: 15px; cursor: pointer;
+}
+.wizard-actions .btn-primary:hover { background: var(--blue-500); }
+.wizard-actions .btn-primary:disabled { background: #a9b6d8; cursor: not-allowed; }
+
+/* --- 어학·프로그래밍역량 연쇄 드롭다운 --- */
+.cascade-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.cascade-row select, .cascade-row input {
+  padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 14px; font-family: inherit; background: #fff; color: var(--text);
+  min-width: 150px;
+}
+.cascade-row input { min-width: 130px; }
+.cascade-row select:focus, .cascade-row input:focus {
+  outline: none; border-color: var(--blue-500); box-shadow: 0 0 0 3px var(--blue-50);
+}
+.cascade-slot { display: contents; }
+.cascade-slot[hidden] { display: none; }
+.field-note { font-size: 12.5px; color: var(--text-muted); margin-top: 7px; }
+.form-divider { border: none; border-top: 1px solid var(--border); margin: 26px 0; }
+.wizard .field { margin-bottom: 22px; }
+
+/* 요람 근거 — 접힌 상태가 기본. 미이수 과목마다 조항 전문을 펼치면 칼럼이 끝없이 길어진다. */
+.citation-details { margin-top: 6px; }
+.citation-details summary {
+  cursor: pointer; color: var(--blue-600); font-size: 12px; font-weight: 600;
+  list-style: none;
+}
+.citation-details summary::-webkit-details-marker { display: none; }
+.citation-details summary::before { content: "＋ "; }
+.citation-details[open] summary::before { content: "－ "; }
+.citation-details p {
+  margin: 8px 0 0; padding: 10px 12px; background: var(--bg);
+  border-radius: 8px; font-size: 12px; line-height: 1.7; color: var(--text-muted);
+}
+
+/* 졸업요건 목록 — 값 문구가 길어도 항목명이 세로로 깨지지 않게 */
+.req-list .req-name, .req-list .req-detail { word-break: keep-all; }
+.req-list .req-value { word-break: keep-all; text-align: right; flex-shrink: 0; max-width: 48%; }

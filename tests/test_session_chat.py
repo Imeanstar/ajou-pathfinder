@@ -1,6 +1,10 @@
 from dataclasses import replace
 
-from app.agents.session_chat import apply_self_reported_answers, build_question_list
+from app.agents.session_chat import (
+    apply_self_reported_answers,
+    build_question_list,
+    evaluate_language_score,
+)
 from app.audit import AuditResult, load_requirements
 
 BASE_RESULT = AuditResult(
@@ -94,3 +98,41 @@ def test_apply_self_reported_answers_leaves_other_unresolved_items_untouched():
         result, {"language_requirement": "토익 750점이야"}, requirements
     )
     assert "double_major_or_minor_out_of_scope" in updated.unresolved
+
+
+# --- 화면1에서 드롭다운으로 직접 고르는 어학 성적(2026-08-21 추가) ---
+# 챗봇 자연어 파싱과 달리 시험 종류·점수가 이미 구조화돼 들어온다.
+
+def test_evaluate_language_score_numeric_exam_passes_threshold():
+    requirements = load_requirements(2025)
+    assert evaluate_language_score("TOEIC", 750, requirements) is True
+    assert evaluate_language_score("TOEIC", 700, requirements) is False
+
+
+def test_evaluate_language_score_handles_toefl_subtypes():
+    requirements = load_requirements(2025)
+    # 요람 기준 TOEFL_iBT 72점
+    assert evaluate_language_score("TOEFL_iBT", 80, requirements) is True
+    assert evaluate_language_score("TOEFL_iBT", 70, requirements) is False
+
+
+def test_evaluate_language_score_compares_grade_based_exams_by_rank():
+    """TOEIC Speaking·OPIc은 점수가 아니라 등급이라 숫자 비교(>=)가 통하지 않는다.
+    요람 기준값이 'IM1'처럼 숫자 접미사를 달고 있어 등급만 떼어내 서열로 비교해야 한다."""
+    requirements = load_requirements(2025)
+
+    # 기준 IM1 -> IM 등급 이상이면 충족
+    assert evaluate_language_score("TOEIC_Speaking", "IH", requirements) is True
+    assert evaluate_language_score("TOEIC_Speaking", "IM", requirements) is True
+    assert evaluate_language_score("TOEIC_Speaking", "IL", requirements) is False
+    assert evaluate_language_score("TOEIC_Speaking", "NM", requirements) is False
+
+    # OPIc 기준은 IL
+    assert evaluate_language_score("OPIc", "IL", requirements) is True
+    assert evaluate_language_score("OPIc", "NH", requirements) is False
+
+
+def test_evaluate_language_score_returns_none_for_unknown_exam():
+    """모르는 시험은 '미충족'이 아니라 '판단 불가'다 — 모른다≠미충족 원칙."""
+    requirements = load_requirements(2025)
+    assert evaluate_language_score("듣도보도못한시험", 900, requirements) is None

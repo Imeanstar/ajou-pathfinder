@@ -49,13 +49,41 @@ def _parse_language_answer(text: str) -> dict | None:
     return None
 
 
+# TOEIC Speaking·OPIc 등급 서열(낮은 것부터). 요람 기준값이 "IM1"처럼 숫자 접미사를
+# 달고 있어(실제 TOEIC Speaking은 IM1~IM3로 세분됨) 등급 문자만 떼어 서열로 비교한다.
+GRADE_ORDER = ["NL", "NM", "NH", "IL", "IM", "IH", "AL", "AM", "AH"]
+
+
+def _grade_rank(value: str) -> int | None:
+    normalized = re.sub(r"\d+$", "", str(value).strip().upper())
+    return GRADE_ORDER.index(normalized) if normalized in GRADE_ORDER else None
+
+
+def evaluate_language_score(exam: str, score, requirements: dict) -> bool | None:
+    """시험 종류와 점수(또는 등급)로 어학요건 충족 여부를 판정한다.
+
+    화면1의 어학 드롭다운(TOEIC/TEPS/TOEFL PBT·CBT·iBT/G-TELP Lv2·Lv3/TOEIC Speaking/OPIc)과
+    챗봇 자연어 응답이 공유하는 판정 로직. 모르는 시험이거나 등급을 해석할 수 없으면
+    None을 반환한다 — "모른다"는 "미충족"이 아니다(session_chat 전체를 관통하는 원칙).
+    """
+    threshold = requirements["language_requirement"].get(exam)
+    if threshold is None:
+        return None
+
+    if isinstance(threshold, str):  # 등급제 시험(TOEIC Speaking, OPIc)
+        got, need = _grade_rank(score), _grade_rank(threshold)
+        return None if got is None or need is None else got >= need
+
+    try:
+        return float(score) >= float(threshold)
+    except (TypeError, ValueError):
+        return None
+
+
 def _evaluate_language_requirement(answer: dict | None, requirements: dict) -> bool | None:
     if answer is None:
         return None
-    threshold = requirements["language_requirement"].get(answer["exam"])
-    if threshold is None:
-        return None
-    return answer["score"] >= threshold
+    return evaluate_language_score(answer["exam"], answer["score"], requirements)
 
 
 def _parse_programming_competency_answer(text: str) -> dict:

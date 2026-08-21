@@ -75,15 +75,21 @@ function renderCreditCard() {
       kind: a.programming_competency_certified === true ? "ok"
         : a.programming_competency_certified === false ? "bad" : "unknown",
       name: "프로그래밍 역량 인증",
-      value: "TOPCIT 190점 또는 APC/전국대회",
+      value: "TOPCIT 190점 이상",
       detail: a.unresolved.includes("programming_competency") ? "챗봇에서 알려주세요" : null,
     });
   }
 
+  // 사용자가 화면1에서 어학 성적을 직접 신고했으면 그 시험을 그대로 보여준다 —
+  // 예전엔 TOEIC 기준만 고정 표시해서 TOEIC Speaking을 신고해도 "TOEIC 730점 이상"이라
+  // 떠 무슨 근거로 판정됐는지 알 수 없었다(2026-08-21 수정).
+  const reported = FORM_STATE.language_score;
   items.push({
     kind: a.language_ok === true ? "ok" : a.language_ok === false ? "bad" : "unknown",
     name: "어학요건",
-    value: `TOEIC ${req.language_requirement.TOEIC}점 이상`,
+    value: reported
+      ? `${reported.exam.replace(/_/g, " ")} ${reported.score}`
+      : `TOEIC ${req.language_requirement.TOEIC}점 이상`,
     detail: a.unresolved.includes("language_requirement") ? "챗봇에서 알려주세요" : null,
   });
 
@@ -122,56 +128,114 @@ function renderCreditCard() {
 }
 
 function renderCitations(missingNames, citationByItem) {
-  const withCitation = missingNames.filter((n) => citationByItem[n]);
-  if (withCitation.length === 0) return "";
-  return `<div>${withCitation
-    .map((n) => `<span class="citation-link">[${n} 근거 보기: ${citationByItem[n]}]</span>`)
-    .join(" ")}</div>`;
+  // 미이수 과목이 9개여도 전공필수 조항은 하나라 같은 근거가 9번 반복된다 — 중복을 제거하고
+  // 접힌 상태로 보여준다. 이전엔 과목마다 조항 전문을 그대로 펼쳐 왼쪽 칸이 화면 몇 배
+  // 길이로 늘어나 레이더 차트가 한참 아래로 밀렸다(2026-08-21 실제 화면에서 발견).
+  const unique = [...new Set(missingNames.map((n) => citationByItem[n]).filter(Boolean))];
+  if (unique.length === 0) return "";
+  return unique
+    .map(
+      (text) =>
+        `<details class="citation-details"><summary>요람 근거 보기</summary><p>${text}</p></details>`
+    )
+    .join("");
 }
 
 // --- 역량 레이더 (SVG) ---
+// 2026-08-21 재작성. 이전 버전은 API가 gap(=목표-현재, 0 클램프)만 내려줘서 목표치를
+// "현재+gap"으로 역산했는데, 이미 목표를 채운 축은 gap=0이라 목표=현재가 되어 육각형이
+// 항상 꽉 찬 채로 나왔다(실제 성적표 47과목으로 테스트하다 발견). 이제 백엔드가
+// competency_target을 직접 내려주므로 목표와 현재를 따로 그린다.
+
+const RADAR_AXIS_COUNT = 6;
+
 function buildRadarAxes() {
-  const gap = PLAN.gap;
-  const vector = PLAN.competency_vector;
-  const axisIds = Object.keys(gap)
+  const target = PLAN.competency_target || {};
+  const vector = PLAN.competency_vector || {};
+  const gap = PLAN.gap || {};
+
+  return Object.keys(target)
     .map((id) => {
-      const current = vector[id] || { verified: 0, self_reported: 0 };
-      const currentLevel = current.verified + current.self_reported;
-      const target = gap[id] + currentLevel; // gap = max(0, target-current) 역산(근사)
-      return { id, target, currentLevel, gapValue: gap[id], verified: current.verified, selfReported: current.self_reported };
+      const cur = vector[id] || { verified: 0, self_reported: 0 };
+      const verified = cur.verified || 0;
+      const selfReported = cur.self_reported || 0;
+      const currentLevel = verified + selfReported;
+      const targetLevel = target[id] || 0;
+      return {
+        id,
+        label: id.replace(/_/g, "·"),
+        target: targetLevel,
+        currentLevel,
+        verified,
+        selfReported,
+        gapValue: gap[id] !== undefined ? gap[id] : Math.max(0, targetLevel - currentLevel),
+      };
     })
     .filter((a) => a.target > 0)
     .sort((a, b) => b.target - a.target)
-    .slice(0, 6);
-  return axisIds;
+    .slice(0, RADAR_AXIS_COUNT);
 }
 
 function polarPoint(cx, cy, r, angle) {
-  return [cx + r * Math.sin(angle), cy - r * Math.cos(angle)];
+  return [
+    +(cx + r * Math.sin(angle)).toFixed(2),
+    +(cy - r * Math.cos(angle)).toFixed(2),
+  ];
 }
 
 function renderRadarSvg(axes) {
-  const size = 220, cx = size / 2, cy = size / 2, maxR = 85;
   const n = axes.length;
-  if (n === 0) return "<p class='card-subtitle'>선택한 진로의 역량 격차가 아직 없습니다.</p>";
+  if (n === 0) {
+    return "<p class='card-subtitle'>이 진로에 설정된 역량 목표가 없습니다.</p>";
+  }
 
-  const targetPts = axes.map((a, i) => polarPoint(cx, cy, maxR, (i / n) * 2 * Math.PI));
-  const currentPts = axes.map((a, i) =>
-    polarPoint(cx, cy, maxR * Math.min(1, a.currentLevel / (a.target || 1)), (i / n) * 2 * Math.PI)
-  );
+  // 라벨이 잘리던 문제(이전엔 220x220 정사각형에 라벨을 밀어넣어 좌우가 clip 됐음)를
+  // 뷰박스를 넓히고 각도별로 text-anchor를 바꿔 해결한다.
+  // 라벨(최대 8글자 한글 ≈ 70px)이 양옆으로 뻗으므로 뷰박스를 넉넉히 잡는다
+  const W = 340, H = 250, cx = W / 2, cy = 118, maxR = 70;
+  const angleOf = (i) => (i / n) * 2 * Math.PI;
   const toPath = (pts) => pts.map((p) => p.join(",")).join(" ");
+
+  // 배경 격자(25/50/75/100%)와 축 스포크 — 없으면 다각형이 그냥 덩어리로 보인다
+  const rings = [0.25, 0.5, 0.75, 1]
+    .map((ratio) => {
+      const pts = axes.map((_, i) => polarPoint(cx, cy, maxR * ratio, angleOf(i)));
+      return `<polygon points="${toPath(pts)}" fill="none" stroke="#eceff5" stroke-width="1" />`;
+    })
+    .join("");
+
+  const spokes = axes
+    .map((_, i) => {
+      const [x, y] = polarPoint(cx, cy, maxR, angleOf(i));
+      return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#eceff5" stroke-width="1" />`;
+    })
+    .join("");
+
+  const targetPts = axes.map((_, i) => polarPoint(cx, cy, maxR, angleOf(i)));
+  const currentPts = axes.map((a, i) =>
+    polarPoint(cx, cy, maxR * Math.min(1, a.currentLevel / (a.target || 1)), angleOf(i))
+  );
 
   const labels = axes
     .map((a, i) => {
-      const [x, y] = polarPoint(cx, cy, maxR + 22, (i / n) * 2 * Math.PI);
-      return `<text x="${x}" y="${y}" font-size="9.5" fill="#6b7280" text-anchor="middle">${a.id.replace(/_/g, "·")}</text>`;
+      const angle = angleOf(i);
+      const [x, y] = polarPoint(cx, cy, maxR + 16, angle);
+      const sin = Math.sin(angle);
+      const anchor = sin > 0.25 ? "start" : sin < -0.25 ? "end" : "middle";
+      const met = a.gapValue <= 0.001;
+      return `<text x="${x}" y="${y + 3}" font-size="10" font-weight="600"
+        fill="${met ? "#1e8e5a" : "#6b7280"}" text-anchor="${anchor}">${a.label}</text>`;
     })
     .join("");
 
   return `
-    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <polygon points="${toPath(targetPts)}" fill="none" stroke="#c7cbd6" stroke-dasharray="3,3" />
-      <polygon points="${toPath(currentPts)}" fill="rgba(47,95,218,0.25)" stroke="#2f5fda" stroke-width="1.5" />
+    <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" role="img"
+         aria-label="역량 레이더 차트">
+      ${rings}${spokes}
+      <polygon points="${toPath(targetPts)}" fill="none" stroke="#9aa6bf"
+               stroke-width="1.2" stroke-dasharray="4,3" />
+      <polygon points="${toPath(currentPts)}" fill="rgba(47,95,218,0.22)"
+               stroke="#2f5fda" stroke-width="2" stroke-linejoin="round" />
       ${labels}
     </svg>
   `;
@@ -179,23 +243,40 @@ function renderRadarSvg(axes) {
 
 function renderCompetencyCard() {
   const axes = buildRadarAxes();
+
+  // 격차가 큰 순으로 정렬하되, 충족한 축은 "-0.00" 같은 무의미한 숫자 대신 "충족"으로 표시한다
+  // (2026-08-21 실제 화면에서 전 항목이 -0.00으로 나와 무슨 뜻인지 알 수 없었던 문제).
   const gapRows = axes
     .slice()
     .sort((a, b) => b.gapValue - a.gapValue)
-    .map(
-      (a) => `
+    .map((a) => {
+      const met = a.gapValue <= 0.001;
+      const fillRatio = Math.min(100, (a.currentLevel / (a.target || 1)) * 100);
+      const valueText = met
+        ? `<span style="color:var(--green);font-weight:700">충족</span>`
+        : `<span style="color:var(--blue-600);font-weight:700">${a.gapValue.toFixed(1)} 부족</span>`;
+      return `
       <div class="gap-row">
-        <div class="gap-label"><span>${a.id.replace(/_/g, "·")}</span><span>-${a.gapValue.toFixed(2)}</span></div>
-        <div class="gap-bar"><div style="width:${Math.min(100, (a.gapValue / (a.target || 1)) * 100)}%"></div></div>
-      </div>`
-    )
+        <div class="gap-label"><span>${a.label}</span>${valueText}</div>
+        <div class="gap-bar">
+          <div style="width:${fillRatio}%;background:${met ? "var(--green)" : "var(--blue-600)"}"></div>
+        </div>
+      </div>`;
+    })
     .join("");
+
+  const shortfall = axes.filter((a) => a.gapValue > 0.001).length;
+  const summary =
+    shortfall === 0
+      ? "선택한 진로의 역량 목표를 모두 채웠습니다."
+      : `목표에 못 미치는 역량이 ${shortfall}개 있습니다.`;
 
   document.getElementById("competencyCard").innerHTML = `
     <p class="card-title">역량 진단</p>
+    <p class="card-subtitle">${summary}</p>
     <div class="radar-legend">
       <span><span class="legend-swatch" style="background:#2f5fda"></span>현재(검증+자기신고×0.5)</span>
-      <span><span class="legend-swatch" style="background:transparent;border:1px dashed #c7cbd6"></span>목표 트랙</span>
+      <span><span class="legend-swatch" style="background:transparent;border:1px dashed #9aa6bf"></span>목표 트랙</span>
     </div>
     <div style="text-align:center">${renderRadarSvg(axes)}</div>
     <div class="gap-list">${gapRows}</div>
