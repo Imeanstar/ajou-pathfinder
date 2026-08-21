@@ -338,3 +338,71 @@ def test_audit_selfreport_updates_programming_competency_only():
     updated = resp.json()
     assert updated["programming_competency_certified"] is True
     assert "programming_competency" not in updated["unresolved"]
+
+
+# --- 로그인(구글, @ajou.ac.kr 전용) + 최신 로드맵 저장/조회 (2026-08-21) ---
+
+def test_auth_verify_returns_503_when_client_id_not_configured(monkeypatch):
+    monkeypatch.delenv("GOOGLE_OAUTH_CLIENT_ID", raising=False)
+    resp = client.post("/api/auth/verify", json={"credential": "whatever"})
+    assert resp.status_code == 503
+
+
+def test_auth_verify_accepts_ajou_account(monkeypatch):
+    monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_ID", "dummy-client-id")
+    monkeypatch.setattr(
+        "app.api.verify_google_id_token",
+        lambda credential, client_id, decode_fn=None: {
+            "email": "student@ajou.ac.kr", "name": "홍길동",
+            "email_hash": "abc123",
+        },
+    )
+    resp = client.post("/api/auth/verify", json={"credential": "fake"})
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["email"] == "student@ajou.ac.kr"
+    assert body["email_hash"] == "abc123"
+
+
+def test_auth_verify_rejects_non_ajou_account(monkeypatch):
+    from app.auth import InvalidDomainError
+
+    monkeypatch.setenv("GOOGLE_OAUTH_CLIENT_ID", "dummy-client-id")
+
+    def _raise(credential, client_id, decode_fn=None):
+        raise InvalidDomainError("@ajou.ac.kr 계정만 로그인할 수 있습니다.")
+
+    monkeypatch.setattr("app.api.verify_google_id_token", _raise)
+    resp = client.post("/api/auth/verify", json={"credential": "fake"})
+    assert resp.status_code == 403
+
+
+def test_plan_latest_returns_404_when_never_saved(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.user_store.DB_PATH", tmp_path / "user_plans.db")
+    resp = client.get("/api/plan/latest/never-seen-hash")
+    assert resp.status_code == 404
+
+
+def test_plan_with_email_hash_autosaves_and_plan_latest_returns_it(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.user_store.DB_PATH", tmp_path / "user_plans.db")
+
+    plan_resp = client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+        "email_hash": "hash-xyz",
+    })
+    assert plan_resp.status_code == 200
+
+    latest = client.get("/api/plan/latest/hash-xyz")
+    assert latest.status_code == 200
+    body = latest.json()
+    assert body["plan"]["audit"] == plan_resp.json()["audit"]
+    assert body["form_state"]["track"] == "백엔드"
+
+
+def test_plan_without_email_hash_does_not_touch_store(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.user_store.DB_PATH", tmp_path / "user_plans.db")
+    client.post("/api/plan", json={
+        "courses": [], "admission_year": 2025, "track_type": "심화과정", "track": "백엔드",
+    })
+    resp = client.get("/api/plan/latest/some-unrelated-hash")
+    assert resp.status_code == 404

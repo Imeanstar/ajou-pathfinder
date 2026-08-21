@@ -39,11 +39,13 @@ from app.agents.session_chat import (
 )
 from app.agents.supervisor import run_full_plan
 from app.audit import AuditResult, attach_citation, audit_graduation, load_requirements
+from app.auth import InvalidDomainError, verify_google_id_token
 from app.guardrail import get_blocked_count, is_guardrail_enabled, set_guardrail_override
 from app.llm import default_structure_fn, soften_recommendation_reasons
 from app.masking import PiiLeakDetected
 from app.parser import InjectionDetected, TranscriptData, parse_transcript
 from app.retrieval import retrieve
+from app.user_store import get_latest_plan, save_latest_plan
 
 app = FastAPI(title="AJOU Pathfinder API")
 
@@ -58,6 +60,12 @@ async def _no_store_cache(request, call_next):
     return response
 
 DEFAULT_REMAINING_TERMS = ["2-2", "3-1", "3-2", "4-1", "4-2"]  # 2025학번 2학년 2학기 진입 기준
+
+# 프론트가 Google Identity Services 버튼을 렌더링할 때 쓴다(app.auth의 검증용 audience와
+# 같은 값이어야 함). Google Cloud Console에서 OAuth 2.0 클라이언트 ID(웹 애플리케이션)를
+# 발급받아 .env에 채워야 실제로 로그인이 동작한다 — 없으면 /api/auth/verify가 정직하게
+# 503을 돌려준다(GOOGLE_API_KEY 없을 때 "개발 모드"로 동작하는 것과 같은 원칙, 거짓
+# 성공을 보여주지 않는다). os.environ을 매 요청 직접 읽어야 테스트에서 monkeypatch가 먹는다.
 
 
 @app.get("/health")
@@ -89,7 +97,37 @@ def config():
         "project_fields": list_project_fields(),
         "admission_year": 2025,  # MVP 대상 고정(주제기획서.md 5-1)
         "track_types": ["심화과정", "일반과정", "복수과정"],
+        "google_client_id": os.environ.get("GOOGLE_OAUTH_CLIENT_ID", ""),
     }
+
+
+class GoogleAuthRequest(BaseModel):
+    credential: str  # Google Identity Services가 돌려주는 서명된 ID 토큰(JWT)
+
+
+@app.post("/api/auth/verify")
+def auth_verify(req: GoogleAuthRequest):
+    """구글 로그인 — @ajou.ac.kr 계정만 허용(app/auth.py). 프론트가 보낸 이메일 문자열이
+    아니라 구글 서명 검증을 통과한 토큰의 payload만 신뢰한다."""
+    client_id = os.environ.get("GOOGLE_OAUTH_CLIENT_ID", "")
+    if not client_id:
+        raise HTTPException(status_code=503, detail="구글 로그인이 아직 설정되지 않았습니다.")
+    try:
+        return verify_google_id_token(req.credential, client_id)
+    except InvalidDomainError as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=401, detail="로그인 확인에 실패했습니다. 다시 시도해주세요.")
+
+
+@app.get("/api/plan/latest/{email_hash}")
+def plan_latest(email_hash: str):
+    """[내 로드맵 이어보기] — 이 계정으로 가장 최근에 저장된 진단을 그대로 돌려준다.
+    한 번도 진단한 적 없으면 없는 데이터를 지어내지 않고 404."""
+    record = get_latest_plan(email_hash)
+    if record is None:
+        raise HTTPException(status_code=404, detail="저장된 로드맵이 없습니다.")
+    return record
 
 
 @app.post("/api/upload")
@@ -158,6 +196,9 @@ class PlanRequest(BaseModel):
     # 직접 고를 수 있게 되면서 여기서도 받는다(2026-08-21). 안 보내면 unresolved 유지.
     language_score: Optional[LanguageScoreIn] = None
     programming_competency: Optional[ProgrammingCompetencyIn] = None
+    # 로그인한 계정의 "가장 최근 로드맵"을 자동 저장하는 데 쓴다(2026-08-21) — 로그인
+    # 안 했으면 안 보내면 되고(None), 그러면 저장하지 않는다(기존 동작 그대로).
+    email_hash: Optional[str] = None
 
 
 def _apply_dropdown_selfreports(audit: AuditResult, req: "PlanRequest", requirements: dict) -> AuditResult:
@@ -252,7 +293,7 @@ def plan(req: PlanRequest):
             if item["name"] in softened:
                 item["reason"] = softened[item["name"]]
 
-    return {
+    response = {
         "audit": asdict(audit),
         "requirements_summary": requirements_summary,
         "citations": citations,
@@ -266,6 +307,11 @@ def plan(req: PlanRequest):
         "program_recommendations": result["program_recommendations"],
         "roadmap": result["roadmap"],
     }
+
+    if req.email_hash:
+        save_latest_plan(req.email_hash, req.model_dump(mode="json"), response)
+
+    return response
 
 
 class SelfReportRequest(BaseModel):

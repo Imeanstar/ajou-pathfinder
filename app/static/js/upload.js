@@ -399,6 +399,17 @@ async function handleSubmit(e) {
   const overlayValue = document.getElementById("overlay").value || null;
   const isGrad = track === "대학원_연구";
 
+  // 로그인한 계정이면 email_hash를 같이 보내 서버가 "가장 최근 로드맵"으로 자동
+  // 저장하게 한다(2026-08-21) — index.html의 [내 로드맵 이어보기]/계정 드로어가
+  // 이 값을 그대로 다시 불러온다. 로그인 안 했으면 undefined라 그냥 저장을 건너뛴다.
+  let emailHash;
+  try {
+    const auth = JSON.parse(localStorage.getItem("pathfinder:auth"));
+    emailHash = auth ? auth.email_hash : undefined;
+  } catch (_) {
+    emailHash = undefined;
+  }
+
   const payload = {
     courses: uploadedCourses,
     admission_year: CONFIG.admission_year,
@@ -409,6 +420,7 @@ async function handleSubmit(e) {
     projects: collectProjects(),
     language_score: collectLanguageScore(),
     programming_competency: collectProgrammingCompetency(),
+    email_hash: emailHash,
   };
 
   try {
