@@ -76,3 +76,11 @@ def test_recommend_courses_llm_selection_still_carries_catalog_metadata():
         {"데이터베이스": 1.0}, taken_names=set(), top_k=1, select_fn=valid_select_fn
     )
     assert "credit" in result[0]
+
+
+def test_recommend_courses_default_reason_uses_readable_label_not_raw_tag():
+    """추천 사유에 '커뮤니케이션_문서화'처럼 언더바 섞인 원본 태그가 그대로 노출되면
+    안 된다(2026-08-21 실사용 중 발견) — competency.yaml의 label(가운뎃점 표기)을 써야 한다."""
+    result = recommend_courses({"커뮤니케이션_문서화": 1.0}, taken_names=set(), top_k=1)
+    assert "커뮤니케이션_문서화" not in result[0]["reason"]
+    assert "커뮤니케이션·문서화" in result[0]["reason"]

@@ -31,6 +31,7 @@ from app.agents.competency import (
     list_project_fields,
     list_tracks,
 )
+from app.agents.chat import answer_question
 from app.agents.session_chat import (
     apply_self_reported_answers,
     build_question_list,
@@ -39,12 +40,22 @@ from app.agents.session_chat import (
 from app.agents.supervisor import run_full_plan
 from app.audit import AuditResult, attach_citation, audit_graduation, load_requirements
 from app.guardrail import get_blocked_count, is_guardrail_enabled, set_guardrail_override
-from app.llm import default_structure_fn
+from app.llm import default_structure_fn, soften_recommendation_reasons
 from app.masking import PiiLeakDetected
 from app.parser import InjectionDetected, TranscriptData, parse_transcript
 from app.retrieval import retrieve
 
 app = FastAPI(title="AJOU Pathfinder API")
+
+
+@app.middleware("http")
+async def _no_store_cache(request, call_next):
+    """개발 서버라 정적 파일(JS/CSS)이 자주 바뀌는데, 브라우저가 예전 버전을 캐시해
+    "코드를 고쳤는데도 화면이 그대로"인 혼란이 두 번 있었다(CSS 미적용, 챗봇 무반응처럼
+    보였던 자기신고 로직 등) — 응답마다 캐시를 금지해 항상 최신 파일을 받게 한다."""
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 DEFAULT_REMAINING_TERMS = ["2-2", "3-1", "3-2", "4-1", "4-2"]  # 2025학번 2학년 2학기 진입 기준
 
@@ -116,6 +127,7 @@ class ManualProjectIn(BaseModel):
     title: str
     field: str
     is_team: bool = False
+    activity_type: str = "project"  # "project" | "club" | "certification" | "program"
 
 
 class LanguageScoreIn(BaseModel):
@@ -193,7 +205,10 @@ def plan(req: PlanRequest):
     audit = _apply_dropdown_selfreports(audit, req, requirements)
 
     taken_course_names = {c["name"] for c in req.courses}
-    projects = [ManualProject(title=p.title, field=p.field, is_team=p.is_team) for p in req.projects]
+    projects = [
+        ManualProject(title=p.title, field=p.field, is_team=p.is_team, activity_type=p.activity_type)
+        for p in req.projects
+    ]
 
     result = run_full_plan(
         transcript,
@@ -204,6 +219,7 @@ def plan(req: PlanRequest):
         remaining_terms=req.remaining_terms,
         domain_overlay=req.domain_overlay,
         grad_lab_cluster=req.grad_lab_cluster,
+        missing_required_courses=audit.missing_required_major_courses,
     )
 
     # 화면이 "33/42학점"처럼 기준치를 같이 보여줘야 해서, AuditResult엔 없는 원 기준값을
@@ -225,6 +241,17 @@ def plan(req: PlanRequest):
         search_fn=lambda query, corpus: retrieve(query, corpus, top_k=1),
     )
 
+    # 추천 사유를 딱딱한 규칙기반 문구("'OO' 역량 격차가 커서 추천합니다")에서 부드러운
+    # 자연어 멘트로 다시 쓴다(2026-08-21 사용자 요청). 실패/키없음이면 원문 그대로 둔다 —
+    # 장식용 문구라 실패해도 추천 자체(closed-set)의 신뢰성엔 영향 없다.
+    track_label = next((t["label"] for t in list_tracks() if t["id"] == req.track), req.track)
+    recommended_items = result["course_recommendations"] + result["program_recommendations"]
+    softened = soften_recommendation_reasons(recommended_items, track_label)
+    if softened:
+        for item in recommended_items:
+            if item["name"] in softened:
+                item["reason"] = softened[item["name"]]
+
     return {
         "audit": asdict(audit),
         "requirements_summary": requirements_summary,
@@ -232,11 +259,33 @@ def plan(req: PlanRequest):
         "questions": build_question_list(audit.unresolved),
         "competency_vector": result["competency_vector"],
         "competency_target": result["competency_target"],
+        "competency_evidence": result["competency_evidence"],
+        "competency_levels": result["competency_levels"],
         "gap": result["gap"],
         "course_recommendations": result["course_recommendations"],
         "program_recommendations": result["program_recommendations"],
         "roadmap": result["roadmap"],
     }
+
+
+class SelfReportRequest(BaseModel):
+    """대시보드 졸업 현황 카드의 "+ 추가하기" 인라인 폼용(2026-08-21) — 챗봇을 거치지
+    않고 audit + 자기신고 값만 보내 갱신된 audit을 바로 받는다. 화면1의 구조화 드롭다운
+    입력과 판정 로직을 그대로 재사용한다(_apply_dropdown_selfreports가 duck-typing으로
+    language_score/programming_competency 속성만 보므로 PlanRequest와 그대로 호환)."""
+
+    audit: dict
+    admission_year: int = 2025
+    language_score: Optional[LanguageScoreIn] = None
+    programming_competency: Optional[ProgrammingCompetencyIn] = None
+
+
+@app.post("/api/audit/selfreport")
+def audit_selfreport(req: SelfReportRequest):
+    requirements = load_requirements(req.admission_year)
+    audit_result = AuditResult(**req.audit)
+    updated = _apply_dropdown_selfreports(audit_result, req, requirements)
+    return asdict(updated)
 
 
 class ChatAnswerRequest(BaseModel):
@@ -251,6 +300,37 @@ def chat_answer(req: ChatAnswerRequest):
     audit_result = AuditResult(**req.audit)
     updated = apply_self_reported_answers(audit_result, req.answers, requirements)
     return asdict(updated)
+
+
+class ChatMessageIn(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str
+
+
+class ChatAskRequest(BaseModel):
+    message: str
+    audit: dict
+    gap: dict[str, float] = {}
+    competency_vector: dict = {}
+    track: str
+    track_type: str
+    history: list[ChatMessageIn] = []
+
+
+@app.post("/api/chat/ask")
+def chat_ask(req: ChatAskRequest):
+    """자유 질의 챗봇 — 슬롯필링(/api/chat/answer)과 달리 정해진 질문이 아니라
+    사용자가 뭐든 물어볼 수 있다(2026-08-21). 판정 데이터 + RAG 검색 결과를 근거로
+    Gemini가 답하고, 근거가 없으면 학사팀 문의를 안내한다."""
+    context = {
+        "track": req.track,
+        "track_type": req.track_type,
+        "audit": req.audit,
+        "gap": req.gap,
+        "competency_vector": req.competency_vector,
+    }
+    history = [{"role": h.role, "content": h.content} for h in req.history]
+    return answer_question(req.message, context, history)
 
 
 @app.get("/")

@@ -1,6 +1,8 @@
 import pytest
 
 from app.agents.competency import (
+    classify_competency_levels,
+    collect_competency_evidence,
     ManualProject,
     compute_gap,
     compute_target,
@@ -154,3 +156,155 @@ def test_compute_target_merges_overlay_with_max():
 
     assert merged["데이터_ML"] >= base["데이터_ML"]
     assert merged["데이터_ML"] > 0.5  # 클러스터(0.9)가 대학원 트랙 기본(0.5)보다 크다
+
+
+def test_collect_competency_evidence_lists_contributing_courses_and_projects():
+    """레이더의 '충족' 판정이 어떤 과목·프로젝트 때문인지 사용자가 확인할 수 있어야 한다
+    (2026-08-21 사용자 요청 — 근거 없이 전부 충족으로만 뜨면 신뢰할 수 없다)."""
+    transcript = TranscriptData(courses=[
+        {"name": "자료구조", "credit": 3, "category": "전공필수"},
+        {"name": "운영체제", "credit": 3, "category": "전공필수"},
+    ])
+    projects = [ManualProject(title="배달앱 클론", field="웹_백엔드", is_team=True)]
+
+    evidence = collect_competency_evidence(transcript, projects)
+
+    course_names = {e["name"] for e in evidence["자료구조_알고리즘"]}
+    assert "자료구조" in course_names
+    assert all(e["type"] == "course" for e in evidence["자료구조_알고리즘"])
+
+    # 웹_백엔드 project_field는 클라우드_인프라/데이터베이스/시스템_네트워크에 기여하고,
+    # 팀 프로젝트라 team_bonus(협업_PM/커뮤니케이션_문서화)도 별도로 붙는다
+    assert any(e["type"] == "project" and e["name"] == "배달앱 클론" for e in evidence["클라우드_인프라"])
+    assert any("배달앱 클론" in e["name"] for e in evidence["협업_PM"])
+
+
+def test_collect_competency_evidence_empty_for_untouched_axis():
+    transcript = TranscriptData(courses=[])
+    evidence = collect_competency_evidence(transcript, projects=[])
+    assert evidence.get("보안", []) == []
+
+
+# --- 역량 진단 재설계 2차: '수업' 요소를 이진(O/X) 판정이 아니라 커리큘럼상
+# "지금 학년까지 들을 수 있는 관련 전공필수 과목 이수율"로 계산한다 (2026-08-21
+# 사용자 피드백 — "n개 이상 들었냐 아니냐"는 여전히 너무 거칠다는 지적).
+# 실제 courses.json에 안 묶이도록 course_catalog를 의존성 주입한다(이 프로젝트
+# 전반의 관례 — structure_fn/select_fn과 같은 패턴).
+
+FAKE_CATALOG = [
+    {"name": "이산수학", "category": "전공필수", "recommended_terms": ["2-1"], "competency_tags": ["자료구조_알고리즘"]},
+    {"name": "자료구조", "category": "전공필수", "recommended_terms": ["2-1"], "competency_tags": ["자료구조_알고리즘"]},
+    {"name": "알고리즘", "category": "전공필수", "recommended_terms": ["2-2"], "competency_tags": ["자료구조_알고리즘"]},
+    {"name": "데이터베이스", "category": "전공선택", "recommended_terms": ["3-1"], "competency_tags": ["데이터베이스"]},
+    {"name": "데이터마이닝", "category": "전공선택", "recommended_terms": ["3-2"], "competency_tags": ["데이터베이스"]},
+]
+
+
+def test_classify_competency_levels_course_factor_is_a_ratio_not_boolean():
+    """관련 전공필수 3개 중 1개만 이수 → '수업' 요소는 O/X가 아니라 1/3 비율이어야 한다
+    (2026-08-21 — "n개 들었냐 아니냐"는 여전히 너무 거칠다는 지적을 반영)."""
+    evidence = {"자료구조_알고리즘": [{"type": "course", "name": "이산수학"}]}
+    target = {"자료구조_알고리즘": 0.8}
+
+    levels = classify_competency_levels(evidence, target, current_grade=2, course_catalog=FAKE_CATALOG)
+
+    assert levels["자료구조_알고리즘"]["factors"]["course"] == pytest.approx(1 / 3)
+
+
+def test_classify_competency_levels_excludes_courses_not_yet_reached_by_grade():
+    """알고리즘은 2학년2학기 권장인데 아직 1학년이면(current_grade=1) 평가 대상에서
+    빠져야 한다 — 아직 들을 시기가 안 된 과목 때문에 감점하면 안 된다."""
+    evidence = {"자료구조_알고리즘": [{"type": "course", "name": "이산수학"}, {"type": "course", "name": "자료구조"}]}
+    target = {"자료구조_알고리즘": 0.8}
+
+    levels = classify_competency_levels(evidence, target, current_grade=1, course_catalog=FAKE_CATALOG)
+
+    # 1학년까지 권장되는 관련 전공필수 과목이 하나도 없다 -> 아직 평가 대상 아님 -> 만점(1.0) 처리
+    assert levels["자료구조_알고리즘"]["factors"]["course"] == 1.0
+
+
+def test_classify_competency_levels_full_required_completion_scores_full_course_factor():
+    evidence = {"자료구조_알고리즘": [
+        {"type": "course", "name": "이산수학"}, {"type": "course", "name": "자료구조"},
+        {"type": "course", "name": "알고리즘"},
+    ]}
+    target = {"자료구조_알고리즘": 0.8}
+
+    levels = classify_competency_levels(evidence, target, current_grade=3, course_catalog=FAKE_CATALOG)
+
+    assert levels["자료구조_알고리즘"]["factors"]["course"] == 1.0
+
+
+def test_classify_competency_levels_falls_back_to_course_count_when_no_required_mapping():
+    """전공필수 매핑이 없는 역량(예: 데이터베이스는 전공선택만 있음)은 관련 과목
+    이수 개수로 대체 판정한다 — 기존 방식과의 절충."""
+    evidence = {"데이터베이스": [{"type": "course", "name": "데이터베이스"}, {"type": "course", "name": "데이터마이닝"}]}
+    target = {"데이터베이스": 0.5}
+
+    levels = classify_competency_levels(evidence, target, current_grade=4, course_catalog=FAKE_CATALOG)
+
+    assert levels["데이터베이스"]["factors"]["course"] == 1.0
+
+
+def test_classify_competency_levels_combines_course_ratio_with_other_three_factors():
+    """수업 요소(연속값)와 실전참여/동아리/자격증(불리언)을 합산해 최종 점수를 낸다."""
+    evidence = {"자료구조_알고리즘": [
+        {"type": "course", "name": "이산수학"},  # 1/3
+        {"type": "project", "name": "토이프로젝트"},
+        {"type": "club", "name": "알고리즘 동아리"},
+    ]}
+    target = {"자료구조_알고리즘": 0.8}
+
+    levels = classify_competency_levels(evidence, target, current_grade=2, course_catalog=FAKE_CATALOG)
+    result = levels["자료구조_알고리즘"]
+
+    assert result["score"] == pytest.approx(1 / 3 + 1 + 1)
+    assert result["level"] == "보통"  # round(2.33) == 2
+
+
+def test_classify_competency_levels_program_participation_counts_as_activity():
+    """교내 프로그램 참여도 '실전 참여' 요소로 인정된다(프로젝트와 동일 취급)."""
+    evidence = {"데이터베이스": [{"type": "program", "name": "AWS 부트캠프"}]}
+    target = {"데이터베이스": 0.6}
+
+    levels = classify_competency_levels(evidence, target, current_grade=4, course_catalog=FAKE_CATALOG)
+
+    assert levels["데이터베이스"]["factors"]["activity"] is True
+
+
+def test_classify_competency_levels_skips_axes_with_zero_target():
+    evidence = {"보안": [{"type": "course", "name": "정보보호개론"}]}
+    target = {"보안": 0.0, "데이터베이스": 0.5}
+
+    levels = classify_competency_levels(evidence, target, current_grade=4, course_catalog=FAKE_CATALOG)
+
+    assert "보안" not in levels
+    assert "데이터베이스" in levels
+
+
+def test_classify_competency_levels_no_evidence_is_매우_부족():
+    levels = classify_competency_levels({}, {"데이터베이스": 0.4}, current_grade=4, course_catalog=FAKE_CATALOG)
+    assert levels["데이터베이스"]["score"] == 0
+    assert levels["데이터베이스"]["level"] == "매우 부족"
+
+
+def test_collect_competency_evidence_tags_activity_type_from_manual_project():
+    """자격증·동아리·교내프로그램도 project_fields를 '분야' 선택지로 재사용하되,
+    근거 표시에는 실제 활동 유형(activity_type)이 그대로 남아야 한다
+    (2026-08-21 — 역량 판정이 과목 존재만으로 결정되지 않도록 다양한 근거를 받기 위함)."""
+    activities = [
+        ManualProject(title="정보처리기사", field="웹_백엔드", activity_type="certification"),
+        ManualProject(title="웹개발 동아리", field="웹_백엔드", activity_type="club"),
+        ManualProject(title="AWS 클라우드 스쿨", field="웹_백엔드", activity_type="program"),
+    ]
+    evidence = collect_competency_evidence(TranscriptData(courses=[]), activities)
+
+    types_by_name = {e["name"]: e["type"] for e in evidence["클라우드_인프라"]}
+    assert types_by_name["정보처리기사"] == "certification"
+    assert types_by_name["웹개발 동아리"] == "club"
+    assert types_by_name["AWS 클라우드 스쿨"] == "program"
+
+
+def test_manual_project_activity_type_defaults_to_project():
+    project = ManualProject(title="배달앱 클론", field="웹_백엔드")
+    assert project.activity_type == "project"

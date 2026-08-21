@@ -19,6 +19,8 @@ BASE_RESULT = AuditResult(
     unresolved=[],
 )
 
+REQUIREMENTS = load_requirements(2025)
+
 
 def test_build_question_list_excludes_double_major_out_of_scope():
     questions = build_question_list(["double_major_or_minor_out_of_scope", "language_requirement"])
@@ -136,3 +138,63 @@ def test_evaluate_language_score_returns_none_for_unknown_exam():
     """모르는 시험은 '미충족'이 아니라 '판단 불가'다 — 모른다≠미충족 원칙."""
     requirements = load_requirements(2025)
     assert evaluate_language_score("듣도보도못한시험", 900, requirements) is None
+
+
+# --- "없어" 같은 명시적 부정 응답 처리 (2026-08-21 실사용 버그) ---
+# 예전엔 "없어"가 어느 패턴에도 안 걸려 계속 "이해 못 했다"고 같은 질문을 무한 반복했다.
+# 반대로 programming_competency는 파싱 실패해도 무조건 False로 확정해버려
+# "모른다≠미충족" 원칙이 깨져 있었다(가비지 입력도 "미충족"으로 감정).
+
+def test_language_explicit_negative_resolves_to_not_met():
+    result = replace(BASE_RESULT, unresolved=["language_requirement"])
+    updated = apply_self_reported_answers(
+        result, {"language_requirement": "없어"}, REQUIREMENTS
+    )
+    assert updated.language_ok is False
+    assert "language_requirement" not in updated.unresolved
+
+
+def test_language_negative_mixed_with_extra_text_still_resolves():
+    result = replace(BASE_RESULT, unresolved=["language_requirement"])
+    updated = apply_self_reported_answers(
+        result, {"language_requirement": "없어. 난 뭐 듣는걸 추천해?"}, REQUIREMENTS
+    )
+    assert updated.language_ok is False
+
+
+def test_language_pure_garbage_stays_unresolved():
+    result = replace(BASE_RESULT, unresolved=["language_requirement"])
+    updated = apply_self_reported_answers(
+        result, {"language_requirement": "어"}, REQUIREMENTS
+    )
+    assert updated.language_ok is None
+    assert "language_requirement" in updated.unresolved
+
+
+def test_programming_competency_explicit_negative_resolves_to_not_certified():
+    result = replace(BASE_RESULT, unresolved=["programming_competency"])
+    updated = apply_self_reported_answers(
+        result, {"programming_competency": "없어"}, REQUIREMENTS
+    )
+    assert updated.programming_competency_certified is False
+    assert "programming_competency" not in updated.unresolved
+
+
+def test_programming_competency_garbage_input_stays_unresolved():
+    """가비지/IME 잔여 입력('어' 한 글자 등)이 '미충족'으로 확정되면 안 된다 —
+    모른다≠미충족 원칙이 이 항목에서만 깨져 있었다(2026-08-21 실사용 중 발견)."""
+    result = replace(BASE_RESULT, unresolved=["programming_competency"])
+    updated = apply_self_reported_answers(
+        result, {"programming_competency": "어"}, REQUIREMENTS
+    )
+    assert updated.programming_competency_certified is None
+    assert "programming_competency" in updated.unresolved
+
+
+def test_programming_competency_positive_topcit_still_works():
+    result = replace(BASE_RESULT, unresolved=["programming_competency"])
+    updated = apply_self_reported_answers(
+        result, {"programming_competency": "TOPCIT 200점 받았어"}, REQUIREMENTS
+    )
+    assert updated.programming_competency_certified is True
+    assert "programming_competency" not in updated.unresolved

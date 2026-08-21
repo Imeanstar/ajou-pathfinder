@@ -12,7 +12,7 @@ let CONFIG = null;
 let uploadedCourses = [];
 
 // --- 단계 전환: 나가는 섹션을 위로 페이드아웃 → 들어오는 섹션을 아래에서 페이드인 ---
-function goToStep(fromId, toId, stepNumber) {
+function goToStep(fromId, toId) {
   const from = document.getElementById(fromId);
   const to = document.getElementById(toId);
 
@@ -27,7 +27,6 @@ function goToStep(fromId, toId, stepNumber) {
     // (hidden 해제와 같은 프레임에 떼면 브라우저가 시작값을 못 잡는다).
     requestAnimationFrame(() => requestAnimationFrame(() => to.classList.remove("is-enter")));
 
-    document.getElementById("stepIndicator").textContent = stepNumber;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, 380);
 }
@@ -123,7 +122,7 @@ function uploadFile(file) {
 
     uploadedCourses = body.courses || [];
     renderMaskResult(body);
-    setTimeout(() => goToStep("stepUpload", "stepMasked", 2), 700);
+    setTimeout(() => goToStep("stepUpload", "stepMasked"), 700);
   });
 
   xhr.addEventListener("error", () => {
@@ -234,8 +233,11 @@ function updateOverlayField() {
   document.getElementById("overlayLabel").textContent = isGrad
     ? "관심 연구실 (선택)"
     : "관심 산업 (선택)";
+  // 소프트웨어학과는 특별한 관심 산업이 없으면 서비스 IT 기업을 희망하는 게 보통이라
+  // 기본값 라벨만 그렇게 보여준다(2026-08-21 사용자 요청) — value=""는 그대로라
+  // 실제로 선택 안 한 것과 로직·결과는 완전히 동일하다(domain_overlay: null 그대로 전송).
   overlaySelect.innerHTML =
-    `<option value="">선택 안 함</option>` +
+    `<option value="">${isGrad ? "선택 안 함" : "서비스 IT 기업"}</option>` +
     options.map((name) => `<option value="${name}">${formatOverlayLabel(name)}</option>`).join("");
 }
 
@@ -338,7 +340,17 @@ function collectProgrammingCompetency() {
   return null;
 }
 
-// --- 개인 프로젝트 ---
+// --- 개인 활동(프로젝트·동아리·자격증·교내프로그램) ---
+// 2026-08-21: 역량 진단이 "과목 하나만 들어도 충족"으로 뜨는 게 너무 낙관적이라는
+// 피드백에 따라, 판정 근거를 과목 외에 다양화하려고 활동 유형을 추가했다(app/agents/
+// competency.py의 4요소 판정: 수업/실전참여/동아리/자격증).
+const ACTIVITY_TYPES = [
+  { id: "project", label: "프로젝트" },
+  { id: "club", label: "동아리" },
+  { id: "certification", label: "자격증" },
+  { id: "program", label: "교내 프로그램" },
+];
+
 function projectFieldOptionsHtml() {
   return CONFIG.project_fields.map((f) => `<option value="${f.id}">${f.label}</option>`).join("");
 }
@@ -348,7 +360,10 @@ function addProjectRow() {
   const row = document.createElement("div");
   row.className = "project-row";
   row.innerHTML = `
-    <input type="text" placeholder="프로젝트·활동 제목" class="proj-title" />
+    <select class="proj-activity-type">
+      ${ACTIVITY_TYPES.map((t) => `<option value="${t.id}">${t.label}</option>`).join("")}
+    </select>
+    <input type="text" placeholder="제목 (예: 배달앱 클론 코딩, 정보처리기사)" class="proj-title" />
     <select class="proj-field">${projectFieldOptionsHtml()}</select>
     <select class="proj-type">
       ${PROJECT_FORM_TYPES.map((t) => `<option value="${t.id}">${t.label}</option>`).join("")}
@@ -365,6 +380,7 @@ function collectProjects() {
       title: row.querySelector(".proj-title").value.trim(),
       field: row.querySelector(".proj-field").value,
       is_team: row.querySelector(".proj-type").value === "team",
+      activity_type: row.querySelector(".proj-activity-type").value,
     }))
     .filter((p) => p.title.length > 0);
 }
@@ -375,6 +391,9 @@ async function handleSubmit(e) {
   const submitBtn = document.getElementById("submitBtn");
   submitBtn.disabled = true;
   submitBtn.textContent = "분석 중...";
+  // 졸업판정+역량진단+추천(Gemini 사유 생성 포함)까지 한 번에 계산해 20초 가까이
+  // 걸린다 — 화면이 멈춘 것처럼 보이지 않게 전체 화면 오버레이로 진행 중임을 알린다.
+  document.getElementById("loadingOverlay").hidden = false;
 
   const track = document.getElementById("track").value;
   const overlayValue = document.getElementById("overlay").value || null;
@@ -403,8 +422,9 @@ async function handleSubmit(e) {
 
     sessionStorage.setItem("pathfinder:formState", JSON.stringify(payload));
     sessionStorage.setItem("pathfinder:planResult", JSON.stringify(result));
-    window.location.href = "dashboard.html";
+    window.location.href = "dashboard.html"; // 페이지 이동으로 오버레이도 자연히 사라짐
   } catch (err) {
+    document.getElementById("loadingOverlay").hidden = true;
     submitBtn.disabled = false;
     submitBtn.textContent = "로드맵 만들기";
     alert("로드맵 생성에 실패했습니다. 잠시 후 다시 시도해주세요.");
@@ -420,10 +440,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("uploadProgress").hidden = true;
     document.getElementById("dropzone").classList.remove("is-disabled");
     document.getElementById("fileInput").value = "";
-    goToStep("stepMasked", "stepUpload", 1);
+    goToStep("stepMasked", "stepUpload");
   });
   document.getElementById("confirmMaskBtn").addEventListener("click", () => {
-    goToStep("stepMasked", "stepSettings", 3);
+    goToStep("stepMasked", "stepSettings");
   });
 
   document.getElementById("langExam").addEventListener("change", updateLanguageFields);

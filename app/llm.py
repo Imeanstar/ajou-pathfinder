@@ -40,3 +40,49 @@ def _call_gemini(masked_text: str, api_key: str) -> list[dict]:
     )
     text = response.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
     return json.loads(text)
+
+
+REASON_PROMPT_TEMPLATE = """다음은 '{track_label}' 진로를 목표로 하는 학생에게 추천하는
+과목·프로그램 목록이다. 각 항목마다 부드럽고 자연스러운 한국어 추천 멘트를 한 문장으로
+새로 작성하라.
+
+형식 예시(참고용, 그대로 베끼지 말고 자연스럽게 바꿔 쓸 것):
+"{track_label}을(를) 목표로 하신다면, 이 과목을 통해 데이터베이스 역량을 기르는 건 어떨까요?"
+
+지켜야 할 것:
+- "'OO' 역량 격차가 커서 추천합니다" 같은 딱딱한 기계적 문구는 쓰지 마라.
+- 항목 이름과 역량(reason에 이미 담긴 근거)은 아래 목록에 있는 그대로만 쓰고, 없는 내용을 지어내지 마라.
+- 과목이면 "수강", 프로그램이면 "참여" 같은 자연스러운 동사를 골라라.
+
+--- 항목 목록(JSON) ---
+{items_json}
+
+각 항목의 "name"을 그대로 key로 써서 다음 형식의 JSON 객체만 출력하라(설명 없이):
+{{"항목명": "추천 멘트", ...}}
+"""
+
+
+def soften_recommendation_reasons(items: list[dict], track_label: str) -> dict[str, str] | None:
+    """추천 사유를 부드러운 문장으로 다시 쓴다. 실패하면 None — 호출부가 원래의
+    규칙기반 사유를 그대로 쓰게 한다(장식용 문구라 실패해도 추천 자체는 안전하게 유지됨).
+    """
+    api_key = os.environ.get("GOOGLE_API_KEY")
+    if not api_key or not items:
+        return None
+    try:
+        from google import genai
+
+        client = genai.Client(api_key=api_key)
+        items_payload = [{"name": it["name"], "reason": it.get("reason", "")} for it in items]
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=REASON_PROMPT_TEMPLATE.format(
+                track_label=track_label,
+                items_json=json.dumps(items_payload, ensure_ascii=False),
+            ),
+        )
+        text = response.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        result = json.loads(text)
+        return result if isinstance(result, dict) else None
+    except Exception:
+        return None

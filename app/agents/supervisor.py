@@ -12,6 +12,8 @@ from langgraph.graph import END, StateGraph
 
 from app.agents.competency import (
     ManualProject,
+    classify_competency_levels,
+    collect_competency_evidence,
     compute_gap,
     compute_target,
     diagnose_competency,
@@ -31,10 +33,13 @@ class PathfinderState(TypedDict, total=False):
     taken_course_names: set[str]
     taken_program_titles: set[str]
     remaining_terms: list[str]
+    missing_required_courses: list[str]
     domain_overlay: str | None
     grad_lab_cluster: str | None
     competency_vector: dict[str, dict[str, float]]
+    competency_evidence: dict[str, list[dict]]
     competency_target: dict[str, float]
+    competency_levels: dict[str, dict]
     gap: dict[str, float]
     course_recommendations: list[dict]
     program_recommendations: list[dict]
@@ -43,7 +48,8 @@ class PathfinderState(TypedDict, total=False):
 
 def _competency_node(state: PathfinderState) -> dict:
     vector = diagnose_competency(state["transcript"], state.get("projects", []), state["track"])
-    return {"competency_vector": vector}
+    evidence = collect_competency_evidence(state["transcript"], state.get("projects", []))
+    return {"competency_vector": vector, "competency_evidence": evidence}
 
 
 def _resolve_overlay(state: PathfinderState) -> dict[str, float] | None:
@@ -62,16 +68,33 @@ def _gap_node(state: PathfinderState) -> dict:
     # 목표치도 같이 내보낸다 — 화면의 레이더 차트가 "목표(점선) vs 현재(실선)"를 그리려면
     # gap만으로는 부족하다(gap=0인 축의 목표를 역산할 수 없어 꽉 찬 육각형이 됐었다).
     target = compute_target(state["track"], overlay=overlay)
-    return {"gap": gap, "competency_target": target}
+    # 5단계 판정(매우충족~매우부족)도 여기서 같이 낸다 — target이 있어야 "이 축이
+    # 트랙과 관련 있는지"를 알 수 있어 compute_gap과 같은 노드에서 계산한다.
+    # current_grade: remaining_terms 첫 학기("2-2" 등)의 앞자리 = 현재 학년. 정보가
+    # 없으면(remaining_terms 없이 호출되는 화면2 경로 등) 4학년 기준(전 커리큘럼 대상)
+    # 으로 보수적으로 판정한다.
+    remaining_terms = state.get("remaining_terms") or []
+    current_grade = int(remaining_terms[0].split("-")[0]) if remaining_terms else 4
+    levels = classify_competency_levels(
+        state["competency_evidence"], target, current_grade=current_grade
+    )
+    return {"gap": gap, "competency_target": target, "competency_levels": levels}
+
+
+    # top_k 기본값(3)만 쓰면, 그 3개가 전부 선수과목 미충족일 때 로드맵에 배치할
+    # 후보가 하나도 안 남아 "학기별 로드맵에 과목이 하나도 안 뜨는" 문제가 있었다
+    # (2026-08-21 실사용 중 발견 — 실제로 심화 트랙 후보 3개가 전부 막혀 있었음).
+    # plan_roadmap이 실제로 배치 가능한 것만 화면에 남기므로, 후보 풀을 넉넉히 늘려도
+    # 화면이 산만해지지 않는다.
 
 
 def _course_reco_node(state: PathfinderState) -> dict:
-    result = recommend_courses(state["gap"], state.get("taken_course_names", set()))
+    result = recommend_courses(state["gap"], state.get("taken_course_names", set()), top_k=10)
     return {"course_recommendations": result}
 
 
 def _program_reco_node(state: PathfinderState) -> dict:
-    result = recommend_programs(state["gap"], state.get("taken_program_titles", set()))
+    result = recommend_programs(state["gap"], state.get("taken_program_titles", set()), top_k=10)
     return {"program_recommendations": result}
 
 
@@ -84,6 +107,7 @@ def _roadmap_node(state: PathfinderState) -> dict:
         program_recommendations=state.get("program_recommendations", []),
         taken_course_names=state.get("taken_course_names", set()),
         remaining_terms=state.get("remaining_terms", []),
+        missing_required_courses=state.get("missing_required_courses", []),
     )
     return {"roadmap": result}
 
@@ -159,8 +183,14 @@ def run_full_plan(
     remaining_terms: list[str],
     domain_overlay: str | None = None,
     grad_lab_cluster: str | None = None,
+    missing_required_courses: list[str] | None = None,
 ) -> PathfinderState:
-    """화면 3(로드맵) 진입점 — 그래프 전체(역량진단→격차→추천→학기 배치)를 돈다."""
+    """화면 3(로드맵) 진입점 — 그래프 전체(역량진단→격차→추천→학기 배치)를 돈다.
+
+    missing_required_courses: audit_graduation()이 이미 계산한 미이수 전공필수 목록.
+    로드맵이 gap 추천과 무관하게 이 과목들을 우선 배치하기 위해 필요하다
+    (2026-08-21, "로드맵에 과목이 하나도 안 뜬다" 문제의 근본 원인 수정).
+    """
     return _GRAPH.invoke({
         "transcript": transcript,
         "projects": projects,
@@ -170,4 +200,5 @@ def run_full_plan(
         "remaining_terms": remaining_terms,
         "domain_overlay": domain_overlay,
         "grad_lab_cluster": grad_lab_cluster,
+        "missing_required_courses": missing_required_courses or [],
     })
