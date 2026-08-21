@@ -47,11 +47,16 @@ a:hover { text-decoration: underline; }
   top: 0;
   z-index: 10;
 }
-.app-header .brand { display: flex; align-items: baseline; gap: 8px; }
-.app-header .brand-name { font-weight: 700; font-size: 16px; }
+.app-header .brand { display: flex; align-items: center; gap: 9px; }
+.app-header .brand-name {
+  font-weight: 800; font-size: 14px; letter-spacing: 0.06em; white-space: nowrap;
+}
 .app-header .brand-sub {
   font-size: 11px; letter-spacing: 0.12em; color: #9fb0d9; font-weight: 600;
+  margin-left: 6px; padding-left: 10px; border-left: 1px solid rgba(255,255,255,.18);
 }
+/* 로고 — index.html/upload.html/dashboard.html 헤더에서 공통으로 쓴다(2026-08-21 통일) */
+.brand-logo { width: 20px; height: 20px; display: block; flex-shrink: 0; }
 .app-header .header-context {
   font-size: 13px; color: #c7d2f0; margin-left: 16px;
 }
@@ -274,17 +279,17 @@ select:focus, input:focus { outline: 2px solid var(--blue-500); outline-offset: 
   padding: 22px 40px; background: #fff;
 }
 .landing-brand { display: flex; align-items: center; gap: 10px; }
-.landing-brand svg { width: 20px; height: 20px; }
 .landing-brand span {
   font-weight: 800; font-size: 13px; letter-spacing: 0.14em; color: var(--navy-900);
 }
 
+/* 2026-08-21: 전체적으로 60~70% 크기로 축소 — 원래 값은 화면을 거의 다 채울 만큼 컸다 */
 .landing-main {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; padding: 8vh 24px 12vh; gap: 28px;
+  text-align: center; padding: 6vh 24px 8vh; gap: 20px;
 }
 .landing-hero {
-  margin: 0; font-size: clamp(30px, 5vw, 64px); line-height: 1.25;
+  margin: 0; font-size: clamp(21px, 3.4vw, 44px); line-height: 1.28;
   font-weight: 800; letter-spacing: -0.02em; color: var(--navy-900);
   /* 한글은 어절 중간에서 끊으면 안 된다 — keep-all 없이는 "추/천해"처럼 갈라진다 */
   word-break: keep-all;
@@ -292,26 +297,26 @@ select:focus, input:focus { outline: 2px solid var(--blue-500); outline-offset: 
 }
 .landing-hero em { font-style: normal; color: var(--blue-600); }
 .landing-sub {
-  margin: 0; color: var(--text-muted); font-size: clamp(14px, 1.5vw, 17px); line-height: 1.75;
+  margin: 0; color: var(--text-muted); font-size: clamp(12px, 1.05vw, 13px); line-height: 1.7;
 }
 
 .landing-cta {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  min-width: min(420px, 80vw); padding: 18px 32px;
-  background: var(--navy-900); color: #fff; border: none; border-radius: 8px;
-  font-size: 16px; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-width: min(280px, 70vw); padding: 12px 22px;
+  background: var(--navy-900); color: #fff; border: none; border-radius: 7px;
+  font-size: 13.5px; font-weight: 700; cursor: pointer;
   transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
 }
 .landing-cta:hover { background: var(--navy-800); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(18,33,63,.22); }
 
 .landing-or {
-  display: flex; align-items: center; gap: 16px;
-  width: min(420px, 80vw); color: var(--text-muted); font-size: 13px;
+  display: flex; align-items: center; gap: 12px;
+  width: min(280px, 70vw); color: var(--text-muted); font-size: 11px;
 }
 .landing-or::before, .landing-or::after {
   content: ""; flex: 1; height: 1px; background: var(--border);
 }
-.landing-resume { font-size: 14px; color: var(--text-muted); }
+.landing-resume { font-size: 12px; color: var(--text-muted); }
 .landing-resume a { font-weight: 700; }
 
 /* ============================================================
